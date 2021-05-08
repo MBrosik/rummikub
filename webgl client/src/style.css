@@ -1,0 +1,20 @@
+h1 {
+   color: brown;
+}
+
+body {
+   background-color: cadetblue;
+   margin: 0;
+   padding: 0;
+}
+
+#root {
+   position: absolute;
+   top: 0;
+   left: 0;
+   z-index: -1;
+}
+
+h1 {
+   margin-top: 50px;
+}

@@ -1,0 +1,31 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "css-loader": "^5.2.1",
+    "html-webpack-plugin": "^5.3.1",
+    "style-loader": "^2.0.0",
+    "three-fbx-loader": "^1.0.3",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "devDependencies": {
+    "file-loader": "^6.2.0",
+    "sass": "^1.32.12",
+    "sass-loader": "^11.0.1",
+    "three": "^0.126.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.36.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --progress --watch",
+    "server": "webpack serve --open",
+    "go": "webpack && webpack serve --open"
+  },
+  "author": "",
+  "license": "ISC"
+}
