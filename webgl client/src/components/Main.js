@@ -4,9 +4,9 @@ import {
    BufferGeometry
 } from 'three';
 
-import { Renderer } from './webgl/Renderer';
-import Camera from './webgl/Camera';
-import { Keyboard } from './webgl/utils/Keyboard_Manager';
+import { Renderer } from './modules/Renderer';
+import Camera from './modules/main_webgl_modules/Camera';
+import { Keyboard } from './modules/Keyboard_Manager';
 
 
 

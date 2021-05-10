@@ -1,4 +1,4 @@
-import './style.scss';
+import './sass/style.scss';
 
 import Main from './components/Main';
 
