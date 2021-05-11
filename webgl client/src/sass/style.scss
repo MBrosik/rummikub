@@ -18,15 +18,3 @@ body {
 h1 {
    margin-top: 50px;
 }
-
-$asd: red;
-
-$dd: 1, 2, 3, 4;
-
-div {
-   background-color: $asd;
-   color: $asd;
-   transform: translate(#{$dd}, 123);
-}
-
-@import "./Kuba/s.scss";
