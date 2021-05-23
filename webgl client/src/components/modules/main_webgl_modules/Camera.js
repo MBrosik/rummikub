@@ -1,7 +1,7 @@
 import { DoubleSide, Mesh, MeshNormalMaterial, MeshPhongMaterial, PerspectiveCamera, SphereGeometry, Vector3 } from 'three';
 
 
-export default class Camera {
+export default class Camera extends PerspectiveCamera {
    /**
     * @param {import("three").WebGLRenderer} threeRenderer
     */
@@ -9,11 +9,11 @@ export default class Camera {
       const width = threeRenderer.domElement.width;
       const height = threeRenderer.domElement.height;
 
-      this.threeRenderer = threeRenderer;
+      super(75, width / height, 0.1, 10000);
+      this.lookAt(new Vector3(0, 0, 0))
+      this.rotation.y = 50 * (Math.PI / 180)
 
-      this.threeCamera = new PerspectiveCamera(75, width / height, 0.1, 10000);
-      this.threeCamera.lookAt(new Vector3(0, 0, 0))
-      this.threeCamera.rotation.y = 50 * (Math.PI / 180)
+      this.threeRenderer = threeRenderer;
 
       this.updateSize(threeRenderer);
       window.addEventListener('resize', () => this.updateSize(threeRenderer), false);
@@ -24,7 +24,7 @@ export default class Camera {
     */
    updateSize(renderer = this.threeRenderer) {
 
-      this.threeCamera.aspect = renderer.domElement.width / renderer.domElement.height;
-      this.threeCamera.updateProjectionMatrix();
+      this.aspect = renderer.domElement.width / renderer.domElement.height;
+      this.updateProjectionMatrix();
    }
 }

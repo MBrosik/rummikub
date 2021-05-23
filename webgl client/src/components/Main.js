@@ -10,6 +10,11 @@ import { Keyboard } from './modules/main_webgl_modules/Keyboard_Manager';
 
 
 
+// import {STLLoader} from 'three/examples/jsm/loaders/STLLoader'
+
+// const loader = new STLLoader();
+// loader.load( './models/stl/ascii/slotted_disk.stl', function ( geometry ) {}
+
 
 export default class Main {
    /**
@@ -22,7 +27,7 @@ export default class Main {
       this.container = container;
       this.scene = new Scene();
       this.renderer = new Renderer(this.scene, container);
-      this.camera = new Camera(this.renderer.threeRenderer);
+      this.camera = new Camera(this.renderer);
       this.keyboard = new Keyboard();
 
 
