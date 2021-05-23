@@ -17,7 +17,7 @@ fun main() {
         response.header("Access-Control-Allow-Origin", "*")
     })
 
-    get("/") { request, response -> mainPageGet(request, response) }
+    get("") { request, response -> mainPageGet(request, response) }
 
 }
 

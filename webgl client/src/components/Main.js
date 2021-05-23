@@ -7,6 +7,7 @@ import {
 import { Renderer } from './modules/main_webgl_modules/Renderer';
 import Camera from './modules/main_webgl_modules/Camera';
 import { Keyboard } from './modules/main_webgl_modules/Keyboard_Manager';
+import { ws } from './modules/utils/WebSocket';
 
 
 
@@ -31,13 +32,29 @@ export default class Main {
       this.keyboard = new Keyboard();
 
 
-
       [-1000, 1000].forEach(el => {
          var axes = new AxesHelper(el)
          this.scene.add(axes)
       });
 
       this.renderer.render(this.scene, this.camera.threeCamera)
+
+
+      /**
+       * webSocket
+       */
+
+      ws = new WebSocket(`ws://${location.hostname}:4000`)
+
+      ws.onopen = () => {
+         ws.send(JSON.stringify(
+            {
+
+            }
+         ))
+      }
+
+
       this.init()
    }
    async init() {
