@@ -98,6 +98,12 @@ export default class Main {
 
       await this.createMap();
 
+      this.afterGame();
+   }
+
+
+   afterGame() {
+
       this.card_move_manager = new CardMoveManager(this.camera, this.game_board, this.cards);
    }
 
@@ -122,13 +128,23 @@ export default class Main {
          this.game_board
       );
       this.cards.push(card);
+      this.scene.add(card)
+
+      {
+         let card = new Card(
+            this.cards_resources["Card1"].geometry,
+            new Vector3(0, (board_size.height / 2), 0),
+            this.game_board
+         );
+         this.cards.push(card);
+         this.scene.add(card)
+      }
 
 
       console.log("siemka")
       this.game_board = new Game_Board();
       this.scene.add(this.game_board)
 
-      this.scene.add(card)
 
    }
 }

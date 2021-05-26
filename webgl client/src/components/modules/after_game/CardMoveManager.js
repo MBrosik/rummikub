@@ -78,8 +78,8 @@ export default class CardMoveManager {
       }
 
 
-      this.selected_card.position.x = startX + Math.floor((pointX / board_size.width) * fields_count.x) * field.width + field.x
-      this.selected_card.position.z = startZ + Math.floor((pointZ / board_size.depth) * fields_count.z) * field.depth + field.z
+      this.selected_card.position.x = startX + Math.floor((pointX / board_size.width) * fields_count.x - 0.01) * field.width + field.x
+      this.selected_card.position.z = startZ + Math.floor((pointZ / board_size.depth) * fields_count.z - 0.01) * field.depth + field.z
    }
 
 
