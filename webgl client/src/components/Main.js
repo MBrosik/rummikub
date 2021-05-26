@@ -1,13 +1,22 @@
 import {
    Scene,
    AxesHelper,
-   BufferGeometry
+   BufferGeometry,
+   DirectionalLight,
+   Vector3
 } from 'three';
+
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { Renderer } from './modules/main_webgl_modules/Renderer';
 import Camera from './modules/main_webgl_modules/Camera';
 import { Keyboard } from './modules/main_webgl_modules/Keyboard_Manager';
 import { ws } from './modules/utils/WebSocket';
+import LoadCards from './modules/utils/LoadCards';
+import Game_Board from './modules/map_elements/Game_Board';
+import Card from './modules/map_elements/Card';
+import { board_size } from './modules/settings/board_info';
+import CardMoveManager from './modules/after_game/CardMoveManager';
 
 
 
@@ -31,32 +40,95 @@ export default class Main {
       this.camera = new Camera(this.renderer);
       this.keyboard = new Keyboard();
 
+      this.renderer.render_update(this.scene, this.camera);
 
+      // -------------------
+      // axis
+      // -------------------
       [-1000, 1000].forEach(el => {
          var axes = new AxesHelper(el)
          this.scene.add(axes)
       });
 
-      this.renderer.render(this.scene, this.camera.threeCamera)
+
+      // -----------------------
+      // orbit Controls
+      // -----------------------
+      // const controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+      // -------------------
+      // webSocket
+      // -------------------
+
+      // ws = new WebSocket(`ws://${location.hostname}:4000`)
+
+      // ws.onopen = () => {
+      //    ws.send(JSON.stringify(
+      //       {
+
+      //       }
+      //    ))
+      // }
 
 
-      /**
-       * webSocket
-       */
 
-      ws = new WebSocket(`ws://${location.hostname}:4000`)
+      // --------------------
+      // game_board, cards
+      // --------------------
+      /**@type {import("./modules/utils/LoadCards").cardObject} */
+      this.cards_resources;
+      /**@type {Card[]} */
+      this.cards = []
+      /**@type {Game_Board} */
+      this.game_board;
 
-      ws.onopen = () => {
-         ws.send(JSON.stringify(
-            {
 
-            }
-         ))
-      }
+      // --------------------
+      // Card_move_manager
+      // --------------------
+      /**@type {CardMoveManager} */
+      this.card_move_manager = undefined;
 
 
       this.init()
    }
    async init() {
+      this.cards_resources = await LoadCards();
+      console.log(this.cards_resources)
+
+      await this.createMap();
+
+      this.card_move_manager = new CardMoveManager(this.camera, this.game_board, this.cards);
+   }
+
+
+   async createMap() {
+
+
+      // ------------
+      // light
+      // ------------
+      this.light = new DirectionalLight(0xffff00, 10);
+      this.light.position.set(50, 50, 50);
+      this.scene.add(this.light)
+
+
+      // ----------------------
+      // append Cards
+      // ----------------------
+      let card = new Card(
+         this.cards_resources["Card1"].geometry,
+         new Vector3(100, (board_size.height / 2), 100),
+         this.game_board
+      );
+      this.cards.push(card);
+
+
+      console.log("siemka")
+      this.game_board = new Game_Board();
+      this.scene.add(this.game_board)
+
+      this.scene.add(card)
+
    }
 }
