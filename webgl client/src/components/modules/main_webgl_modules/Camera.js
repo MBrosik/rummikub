@@ -10,8 +10,10 @@ export default class Camera extends PerspectiveCamera {
       const height = threeRenderer.domElement.height;
 
       super(75, width / height, 0.1, 10000);
+
+      this.position.set(150, 400, 150)
       this.lookAt(new Vector3(0, 0, 0))
-      this.rotation.y = 50 * (Math.PI / 180)
+      // this.rotation.y = 50 * (Math.PI / 180)
 
       this.threeRenderer = threeRenderer;
 

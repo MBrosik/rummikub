@@ -21,10 +21,15 @@ fun main() {
     // ---------------
     // server config
     // ---------------
-    val http: Http = ignite()
-    with(http) {
-        Spark.port(getHerokuPort())
-        Spark.staticFileLocation("/public")
+    Spark.port(5000)
+    Spark.staticFileLocation("/public")
+
+    Spark.before({ request, response ->
+        response.header("Access-Control-Allow-Methods", "*")
+        response.header("Access-Control-Allow-Origin", "*")
+    })
+
+    get("") { request, response -> mainPageGet(request, response) }
 
         Spark.before({ request, response ->
             response.header("Access-Control-Allow-Methods", "*")

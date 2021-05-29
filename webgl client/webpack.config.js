@@ -20,7 +20,7 @@ module.exports = {
       new HtmlWebpackPlugin({
          hash: true,
          filename: './index.html', //relative to root of the application
-         title: "FPS game",
+         title: "Rummikub",
          template: './src/index.html',
          h1: "THREEJS webpack project",
       })
@@ -38,7 +38,11 @@ module.exports = {
          {
             test: /.(md2)$/i,
             type: 'asset/resource',
-         }
+         },
+         {
+            test: /.(stl)$/i,
+            type: 'asset/resource',
+         },
       ],
    },
 };
