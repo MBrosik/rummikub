@@ -3,13 +3,13 @@ import {
    Mesh,
    MeshBasicMaterial
 } from "three";
-import { board_size } from "../settings/board_info";
+import { BOARD_SIZE } from "../settings/board_info";
 
 
 export default class Game_Board extends Mesh {
    constructor() {
 
-      let { width, height, depth } = board_size
+      let { width, height, depth } = BOARD_SIZE
       let geometry = new BoxGeometry(width, height, depth)
       let material = new MeshBasicMaterial({ color: 0xffffff })
 

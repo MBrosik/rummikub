@@ -15,7 +15,7 @@ import { WS } from './modules/WebSocket';
 import LoadCards from './modules/utils/LoadCards';
 import Game_Board from './modules/map_elements/Game_Board';
 import Card from './modules/map_elements/Card';
-import { board_size } from './modules/settings/board_info';
+import { BOARD_SIZE } from './modules/settings/board_info';
 import CardMoveManager from './modules/after_game/CardMoveManager';
 
 
@@ -116,7 +116,7 @@ export default class Main {
       // ----------------------
       let card = new Card(
          this.cards_resources["Card1"].geometry,
-         new Vector3(100, (board_size.height / 2), 100),
+         new Vector3(100, (BOARD_SIZE.height / 2), 100),
          this.game_board
       );
       this.cards.push(card);
@@ -125,7 +125,7 @@ export default class Main {
       {
          let card = new Card(
             this.cards_resources["Card1"].geometry,
-            new Vector3(0, (board_size.height / 2), 0),
+            new Vector3(0, (BOARD_SIZE.height / 2), 0),
             this.game_board
          );
          this.cards.push(card);
@@ -136,7 +136,5 @@ export default class Main {
       console.log("siemka")
       this.game_board = new Game_Board();
       this.scene.add(this.game_board)
-
-
    }
 }

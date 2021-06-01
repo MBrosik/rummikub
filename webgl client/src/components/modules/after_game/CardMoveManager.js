@@ -1,5 +1,5 @@
 import Card from "../map_elements/Card";
-import { board_size, fields_count } from "../settings/board_info";
+import { BOARD_SIZE, FIELDS_COUNT } from "../settings/board_info";
 import CameraColider from "../utils/CameraColider";
 
 
@@ -39,7 +39,10 @@ export default class CardMoveManager {
       window.addEventListener("mouseup", this.mouseup_ev_bind)
    }
 
+
+
    /**
+    * @description Funkcja wykonująca się na naciśnięcie myszy
     * @param {MouseEvent} e 
     */
    mousedown_ev(e) {
@@ -52,7 +55,10 @@ export default class CardMoveManager {
    }
 
 
+
+
    /**
+    * @description Funkcja wykonująca się na poruszenie się myszy    
     * @param {MouseEvent} e 
     */
    mousemove_ev(e) {
@@ -60,8 +66,8 @@ export default class CardMoveManager {
 
       let { x, z } = this.game_board.position
 
-      let startX = x - (board_size.width / 2);
-      let startZ = z - (board_size.depth / 2);
+      let startX = x - (BOARD_SIZE.width / 2);
+      let startZ = z - (BOARD_SIZE.depth / 2);
 
       this.board_intersect = this.gameBoardCameraColider.getIntersects(e)[0]
 
@@ -71,20 +77,23 @@ export default class CardMoveManager {
       let pointZ = this.board_intersect.point.z - startZ;
 
       let field = {
-         x: (board_size.width / fields_count.x) / 2,
-         z: (board_size.depth / fields_count.z) / 2,
-         width: board_size.width / fields_count.x,
-         depth: board_size.depth / fields_count.z,
+         x: (BOARD_SIZE.width / FIELDS_COUNT.x) / 2,
+         z: (BOARD_SIZE.depth / FIELDS_COUNT.z) / 2,
+         width: BOARD_SIZE.width / FIELDS_COUNT.x,
+         depth: BOARD_SIZE.depth / FIELDS_COUNT.z,
       }
 
+      let x_floor = Math.max(0, Math.floor((pointX / BOARD_SIZE.width) * FIELDS_COUNT.x - 0.01) * field.width);
+      let y_floor = Math.max(0, Math.floor((pointZ / BOARD_SIZE.depth) * FIELDS_COUNT.z - 0.01) * field.depth);
 
-      this.selected_card.position.x = startX + Math.floor((pointX / board_size.width) * fields_count.x - 0.01) * field.width + field.x
-      this.selected_card.position.z = startZ + Math.floor((pointZ / board_size.depth) * fields_count.z - 0.01) * field.depth + field.z
+      this.selected_card.position.x = startX + x_floor + field.x
+      this.selected_card.position.z = startZ + y_floor + field.z
    }
 
 
 
    /**
+    * @description Funkcja wykonująca się na podniesienie myszy    
     * @param {MouseEvent} e 
     */
    mouseup_ev(e) {
