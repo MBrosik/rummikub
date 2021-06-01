@@ -8,9 +8,6 @@ import spark.Spark.webSocket
 import spark.kotlin.Http
 import spark.kotlin.ignite
 
-
-val ws= webSocket("/rummikub", WebSocketObject.WebSocketServer::class.java)
-
 fun main() {
     println("Hello world");
 
@@ -19,6 +16,10 @@ fun main() {
             "imie varchar(255) not null" +
             ");")
 
+    /**
+     * websocket
+     */
+    webSocket("/rummikub", WebSocketObject.WebSocketServer::class.java)
 
     /**
      * spark
@@ -43,8 +44,6 @@ fun main() {
          */
         get("/") { request, response -> mainPageGet(request, response) }
     }
-
-
 }
 
 
