@@ -10,19 +10,27 @@ export class WS extends WebSocket {
    constructor() {
       // super(`ws://${location.hostname}:${location.port}/rummikub`)
       super(`ws://${location.hostname}:${5000}/rummikub`)
+      console.log("siemka");
+
+      this.onopen = this.onopen_ev.bind(this)
+      this.onmessage = this.onmessage_ev.bind(this)
+      this.onerror = this.onerror_ev.bind(this)
+      this.onclose = this.onclose_ev.bind(this)
    }
 
 
    /**
     * @description Funkcja, która wykonuje się po połączeniu się z websocketem
     */
-   onopen() {
+   onopen_ev() {
+      console.log("onopen")
       this.send(JSON.stringify({
          type: "OnOpen",
          info: {
             message: "siemka",
          }
       }))
+
    }
 
 
@@ -31,12 +39,14 @@ export class WS extends WebSocket {
     * @description odbieranie danych z serwera
     * @param {MessageEvent} e 
     */
-   onmessage(e) {
+   onmessage_ev(e) {
+      console.log("onmessage");
       console.log(e.data)
 
       for (const key in messageFunctions) {
          messageFunctions[key](e.data);
       }
+
    }
 
 
@@ -45,7 +55,7 @@ export class WS extends WebSocket {
     * @description obsługa błędów    
     * @param {Event} e 
     */
-   onerror(e) {
+   onerror_ev(e) {
       console.log(e.message)
    }
 
@@ -55,7 +65,8 @@ export class WS extends WebSocket {
     * @description Zamknięcie połączenia    
     * @param {CloseEvent} e 
     */
-   onclose(e) {
+   onclose_ev(e) {
+      console.log("onclose");
       console.log(e.code, e.reason);
    }
 }

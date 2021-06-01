@@ -62,6 +62,11 @@ export default class Main {
 
       this.ws = new WS();
 
+      // this.ws.onopen = () => { console.log("siemka") }
+
+      // let aa = new WebSocket(`ws://${location.hostname}:${5000}/rummikub`);
+
+      // aa.onopen = () => { console.log("siemka") }
 
 
       // --------------------
