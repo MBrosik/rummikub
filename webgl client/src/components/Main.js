@@ -11,7 +11,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Renderer } from './modules/main_webgl_modules/Renderer';
 import Camera from './modules/main_webgl_modules/Camera';
 import { Keyboard } from './modules/main_webgl_modules/Keyboard_Manager';
-import { ws } from './modules/utils/WebSocket';
+import { WS } from './modules/WebSocket';
 import LoadCards from './modules/utils/LoadCards';
 import Game_Board from './modules/map_elements/Game_Board';
 import Card from './modules/map_elements/Card';
@@ -60,15 +60,7 @@ export default class Main {
       // webSocket
       // -------------------
 
-      // ws = new WebSocket(`ws://${location.hostname}:4000`)
-
-      // ws.onopen = () => {
-      //    ws.send(JSON.stringify(
-      //       {
-
-      //       }
-      //    ))
-      // }
+      this.ws = new WS();
 
 
 
