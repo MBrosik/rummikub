@@ -68,10 +68,15 @@ object WebSocketObject {
         fun onMessage(user: Session, message: String) {
             val parsedMessage = Gson().fromJson(message, MessageData::class.java)
 
-            //val exampleMap = parsedMessage.info as MutableMap<String, String>
+//            val exampleMap = parsedMessage.info as MutableMap<String, String>
             //var aa = exampleMap["aaa"]!!
 
 //            user.remote.
+
+
+//            if(parsedMessage.type == "Pokoje"){
+//
+//            }
 
 
             for ( value in messageFunctions) {

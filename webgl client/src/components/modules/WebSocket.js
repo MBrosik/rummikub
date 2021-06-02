@@ -30,7 +30,7 @@ export class WS_Class extends WebSocket {
    onopen_ev() {
       console.log("onopen")
       this.send(JSON.stringify({
-         type: "OnOpen",
+         type: "Pokoje",
          info: {
             message: "siemka",
          }

@@ -48,9 +48,16 @@ export default class CardMoveManager {
    mousedown_ev(e) {
       if (this.selected_card != undefined) return
 
+
+      /**
+       * szukanie karty do "złapania"
+       */
       console.log(this.cardsCameraColider.getIntersects(e));
       this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object;
 
+      /**
+       * Zmiana cursora jeżeli złapę obiekt
+       */
       if (this.selected_card != undefined) document.body.style.cursor = "grabbing"
    }
 
@@ -64,25 +71,49 @@ export default class CardMoveManager {
    mousemove_ev(e) {
       if (this.selected_card == undefined) return
 
+      /**
+       * Pobieram dane pozycji 
+       */
       let { x, z } = this.game_board.position
 
+      /**
+       * Obliczam wierzchołek lewy górny planszy
+       */
       let startX = x - (BOARD_SIZE.width / 2);
       let startZ = z - (BOARD_SIZE.depth / 2);
 
+      /** 
+       * Wyszukuję w którym punkcie kliknąłem tabelę
+       */
       this.board_intersect = this.gameBoardCameraColider.getIntersects(e)[0]
 
       if (this.board_intersect == undefined) return;
 
+      /**
+       * Obliczam pozycje względnie do planszy, czyli, że punkt (0,0) to wierzchołek lewy górny planszy
+       */
       let pointX = this.board_intersect.point.x - startX;
       let pointZ = this.board_intersect.point.z - startZ;
 
+      /**
+       * dane na temat pozycji itd. pierwszego prostokąta (0,0) (ten jeden prostokąt z wielu prostokątów na podzielonej planszy), 
+       * gdzie ma środek, jaką ma szerokość i głębokość
+       */
       let field = {
-         x: (BOARD_SIZE.width / FIELDS_COUNT.x) / 2,
-         z: (BOARD_SIZE.depth / FIELDS_COUNT.z) / 2,
+         x: (BOARD_SIZE.width / FIELDS_COUNT.x) / 2,  // względny środek prostokąta
+         z: (BOARD_SIZE.depth / FIELDS_COUNT.z) / 2,  // względny środek prostokąta
          width: BOARD_SIZE.width / FIELDS_COUNT.x,
          depth: BOARD_SIZE.depth / FIELDS_COUNT.z,
       }
 
+      /**
+       * Obliczanie pozycji na zasadzie "snap to grid". 
+       * Obliczam tj. procentowo pozycję na planszy. Mnożę przez ilość poszczególnych prostokątów w rzędzie/kolumnie. 
+       * Potem robię Math.floor(), aby otrzymać zajętą komórkę.
+       * Następnie to mnożę przez szerokość danego prostokąta 
+       * Potem otrzymaną wartość dodaję do pozycji startowej (wierzchołek lewy/górny) 
+       * i jeszcze dodaję pozycję środka danego prostokąta
+       */
       let x_floor = Math.max(0, Math.floor((pointX / BOARD_SIZE.width) * FIELDS_COUNT.x - 0.01) * field.width);
       let y_floor = Math.max(0, Math.floor((pointZ / BOARD_SIZE.depth) * FIELDS_COUNT.z - 0.01) * field.depth);
 
@@ -99,6 +130,10 @@ export default class CardMoveManager {
    mouseup_ev(e) {
       if (this.selected_card == undefined) return
 
+
+      /**
+       * Na podniesienie klawisza odznaczam zaznaczony obiekt
+       */
       this.selected_card = undefined
       document.body.style.cursor = "grab"
    }

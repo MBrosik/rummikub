@@ -62,6 +62,8 @@ export default class Main {
 
       my_WS.el = new WS_Class();
 
+      // my_WS.el.addEventListener("message");
+
       window.ws = my_WS;
 
       // this.ws.onopen = () => { console.log("siemka") }
