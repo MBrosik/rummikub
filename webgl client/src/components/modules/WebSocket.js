@@ -4,8 +4,12 @@
  */
 export const messageFunctions = {};
 
-/**@type {WS_Class} */
-export let my_WS = undefined
+
+export const my_WS = {
+   /**@type {WS_Class} */
+   el: null
+}
+
 
 export class WS_Class extends WebSocket {
    constructor() {

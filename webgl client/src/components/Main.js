@@ -60,7 +60,7 @@ export default class Main {
       // webSocket
       // -------------------
 
-      my_WS = new WS_Class();
+      my_WS.el = new WS_Class();
 
       window.ws = my_WS;
 
