@@ -1,6 +1,6 @@
 package methods.WebSocket
 
-data class Message(
+data class MessageData(
     val type:String,
     val info:Any,
 )
