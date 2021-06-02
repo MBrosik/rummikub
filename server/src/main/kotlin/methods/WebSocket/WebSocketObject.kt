@@ -38,6 +38,14 @@ object WebSocketObject {
             println("OnConnect")
             println(user)
 
+            println("localAddress: ${user.localAddress}");
+            println("user.policy: ${user.policy}")
+            println("user.remote: ${user.remote}")
+            println("user.remoteAddress: ${user.remoteAddress}")
+            println("user.protocolVersion: ${user.protocolVersion}")
+            println("user.hashCode: ${user.hashCode()}")
+
+
             user.remote.sendString("Siemka")
         }
 
@@ -72,6 +80,13 @@ object WebSocketObject {
             }
 
             println("onMessage")
+
+            println("localAddress: ${user.localAddress}");
+            println("user.policy: ${user.policy}")
+            println("user.remote: ${user.remote}")
+            println("user.remoteAddress: ${user.remoteAddress}")
+            println("user.protocolVersion: ${user.protocolVersion}")
+            println("user.hashCode: ${user.hashCode()}")
         }
     }
 }

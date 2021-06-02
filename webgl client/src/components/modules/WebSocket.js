@@ -4,9 +4,10 @@
  */
 export const messageFunctions = {};
 
+/**@type {WS_Class} */
+export let my_WS = undefined
 
-
-export class WS extends WebSocket {
+export class WS_Class extends WebSocket {
    constructor() {
       // super(`ws://${location.hostname}:${location.port}/rummikub`)
       super(`ws://${location.hostname}:${5000}/rummikub`)
