@@ -1,4 +1,4 @@
-package methods
+package main.kotlin.methods
 
 import java.sql.DriverManager
 

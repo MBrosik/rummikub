@@ -96,10 +96,13 @@ export default class Main {
       console.log(this.cards_resources)
 
       await this.createMap();
-
+      await this.roomsAdd();
       this.afterGame();
    }
+   async roomsAdd() {
+      //dodanie pokoji
 
+   }
 
    afterGame() {
 

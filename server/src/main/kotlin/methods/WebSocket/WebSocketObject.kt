@@ -1,4 +1,4 @@
-package methods.WebSocket
+package main.kotlin.methods.WebSocket
 
 import com.google.gson.Gson
 import org.eclipse.jetty.websocket.api.Session

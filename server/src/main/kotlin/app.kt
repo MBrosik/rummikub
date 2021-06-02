@@ -1,5 +1,7 @@
-import methods.WebSocket.WebSocketObject
-import methods.sqlQuery
+package main.kotlin
+
+import main.kotlin.methods.WebSocket.WebSocketObject
+import main.kotlin.methods.sqlQuery
 import spark.Request
 import spark.Response
 import spark.Spark
@@ -55,9 +57,9 @@ fun mainPageGet(request:Request, response:Response):String{
     response.type("application/json");
     println("ee")
 
-    sqlQuery.execute("INSERT INTO TBL01 (imie) VALUES ('rre');")
+    sqlQuery.execute("INSERT INTO Rooms (imie) VALUES ('rre');")
 
-    val temp = sqlQuery.select("SELECT id, imie FROM TBL01;")
+    val temp = sqlQuery.select("SELECT id, imie FROM Rooms;")
     println(temp)
 
     return "{'a':1}";

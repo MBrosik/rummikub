@@ -1,4 +1,4 @@
-package methods.WebSocket
+package main.kotlin.methods.WebSocket
 
 data class MessageData(
     val type:String,
