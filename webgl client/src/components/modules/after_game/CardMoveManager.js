@@ -15,9 +15,9 @@ export default class CardMoveManager {
       this.cards = cards;
 
       /**@type {Card} */
-      this.selected_card;
+      this.selected_card = undefined;
       /**@type {import("three").Intersection} */
-      this.board_intersect;
+      this.board_intersect = undefined;
 
 
       // ------------------

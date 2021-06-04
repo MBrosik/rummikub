@@ -14,8 +14,8 @@ export const my_WS = {
 export class WS_Class extends WebSocket {
    constructor() {
       // super(`ws://${location.hostname}:${location.port}/rummikub`)
-      // super(`ws://${location.hostname}:${5000}/rummikub`)
-      super(`wss://rumikub.herokuapp.com/rummikub`)
+      super(`ws://${location.hostname}:${5000}/rummikub`)
+      // super(`wss://rumikub.herokuapp.com/rummikub`)
       console.log("siemka");
 
       this.onopen = this.onopen_ev.bind(this)
