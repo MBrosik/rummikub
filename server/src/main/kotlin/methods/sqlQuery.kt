@@ -12,7 +12,7 @@ object sqlQuery {
         stmt.execute(sql)
         conn.close()
     }
-    fun select(sql:String): ArrayList<HashMap<Any, Any>> {
+    fun select(sql:String): ArrayList<HashMap<String, String>> {
         // ---------------
         // get connection
         // ---------------
@@ -27,18 +27,18 @@ object sqlQuery {
         // ---------------
         // return list
         // ---------------
-        val dataList = ArrayList<HashMap<Any, Any>>();
+        val dataList = ArrayList<HashMap<String, String>>();
 
         // ---------------
         // fetch data
         // ---------------
         while (rs.next()) {
-            val Hashmap = hashMapOf<Any, Any>()
+            val hashMap = hashMapOf<String, String>()
 
             for (i in 1..rs.metaData.columnCount){
-                Hashmap.put(rs.metaData.getColumnName(i), rs.getObject(i))
+                hashMap[rs.metaData.getColumnName(i)] = rs.getString(i)
             }
-            dataList.add(Hashmap)
+            dataList.add(hashMap)
         }
         conn.close()
 
