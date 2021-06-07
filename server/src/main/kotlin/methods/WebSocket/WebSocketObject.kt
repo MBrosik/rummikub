@@ -1,30 +1,36 @@
 package main.kotlin.methods.WebSocket
 
 import com.google.gson.Gson
+import main.kotlin.methods.roomManage.RoomObject
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage
 import org.eclipse.jetty.websocket.api.annotations.WebSocket
 import java.io.IOException
-import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.collections.ArrayList
 
 
 object WebSocketObject {
-    val sessions: Queue<Session> = ConcurrentLinkedQueue()
-    val messageFunctions = ArrayList<(user:Session,data:MessageData) -> Unit>()
+    /**
+     * objekt sesji, jako key przechowujemy hashCode (identyfikator) sesji,
+     * a jako value dane np o połączeniu i o pokojach
+     */
+    val sessions: MutableMap<Int,SessionStructure> = mutableMapOf()
+
 
     /**
      *  funckja, która odpowiada za wysyłanie wiadomości
      *  do wszystkich dostępnych klientów
      */
     fun broadcast(message: String) {
-        for (x in sessions) {
-            x.remote.sendString(message)
+        for ((key,value) in sessions) {
+            value.session.remote.sendString(message)
         }
     }
+
+
+
 
     @WebSocket
     class WebSocketServer {
@@ -34,20 +40,28 @@ object WebSocketObject {
          */
         @OnWebSocketConnect
         fun onConnect(user: Session) {
-            sessions.add(user);
+            sessions[user.hashCode()] = SessionStructure(user)
+
+
             println("OnConnect")
             println(user)
 
-            println("localAddress: ${user.localAddress}");
-            println("user.policy: ${user.policy}")
-            println("user.remote: ${user.remote}")
-            println("user.remoteAddress: ${user.remoteAddress}")
-            println("user.protocolVersion: ${user.protocolVersion}")
+//            println("localAddress: ${user.localAddress}");
+//            println("user.policy: ${user.policy}")
+//            println("user.remote: ${user.remote}")
+//            println("user.remoteAddress: ${user.remoteAddress}")
+//            println("user.protocolVersion: ${user.protocolVersion}")
             println("user.hashCode: ${user.hashCode()}")
 
 
-            user.remote.sendString("Siemka")
+            val sendMap = mapOf<String, String>(
+                "type" to "onConnect",
+                "data" to "Witaj Websockecie!!"
+            )
+            user.remote.sendString(Gson().toJson(sendMap))
         }
+
+
 
 
         /**
@@ -55,9 +69,16 @@ object WebSocketObject {
          */
         @OnWebSocketClose
         fun onClose(user: Session, statusCode: Int, reason: String?) {
-            sessions.remove(user);
+            /**
+             * Usuwanie z Gracza z pokoju
+             */
+            RoomObject.removeFromRoom(sessions[user.hashCode()]!!)
+            sessions.remove(user.hashCode())
+
             println("onClose")
         }
+
+
 
 
         /**
@@ -66,10 +87,31 @@ object WebSocketObject {
         @OnWebSocketMessage
         @Throws(IOException::class)
         fun onMessage(user: Session, message: String) {
+            /**
+             * filtrowanie wiadomości
+             */
             val parsedMessage = Gson().fromJson(message, MessageData::class.java)
 
+            when(parsedMessage.type){
+                "joinRoom"-> RoomObject.searchForRoom(sessions[user.hashCode()]!!, parsedMessage.data)
+            }
+
+
+            println("onMessage")
+
+//            println("localAddress: ${user.localAddress}");
+//            println("user.policy: ${user.policy}")
+//            println("user.remote: ${user.remote}")
+//            println("user.remoteAddress: ${user.remoteAddress}")
+//            println("user.protocolVersion: ${user.protocolVersion}")
+            println("user.hashCode: ${user.hashCode()}")
+        }
+    }
+}
+
+
 //            val exampleMap = parsedMessage.info as MutableMap<String, String>
-            //var aa = exampleMap["aaa"]!!
+//var aa = exampleMap["aaa"]!!
 
 //            user.remote.
 
@@ -77,21 +119,3 @@ object WebSocketObject {
 //            if(parsedMessage.type == "Pokoje"){
 //
 //            }
-
-
-            for ( value in messageFunctions) {
-                // value(user, parsed_message);
-                value(user, parsedMessage)
-            }
-
-            println("onMessage")
-
-            println("localAddress: ${user.localAddress}");
-            println("user.policy: ${user.policy}")
-            println("user.remote: ${user.remote}")
-            println("user.remoteAddress: ${user.remoteAddress}")
-            println("user.protocolVersion: ${user.protocolVersion}")
-            println("user.hashCode: ${user.hashCode()}")
-        }
-    }
-}

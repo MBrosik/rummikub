@@ -50,38 +50,19 @@ export default class Main {
          this.scene.add(axes)
       });
 
-
-      // -----------------------
-      // orbit Controls
-      // -----------------------
-      // const controls = new OrbitControls(this.camera, this.renderer.domElement);
-
       // -------------------
       // webSocket
       // -------------------
 
-      my_WS.el = new WS_Class();
-
-      // my_WS.el.addEventListener("message");
+      // my_WS = new WS_Class();
 
       window.ws = my_WS;
 
-      // this.ws.onopen = () => { console.log("siemka") }
-
-      // let aa = new WebSocket(`ws://${location.hostname}:${5000}/rummikub`);
-
-      // aa.onopen = () => { console.log("siemka") }
-
-
       // --------------------
-      // game_board, cards
+      // cards
       // --------------------
-      /**@type {import("./modules/utils/LoadCards").cardObject} */
-      this.cards_resources;
       /**@type {Card[]} */
       this.cards = []
-      /**@type {Game_Board} */
-      this.game_board;
 
 
       // --------------------
@@ -94,26 +75,62 @@ export default class Main {
       this.init()
    }
    async init() {
+      // ----------------------
+      // Get Card resources
+      // ----------------------
+
+      /**@type {import("./modules/utils/LoadCards").cardObject} */
       this.cards_resources = await LoadCards();
+
       console.log(this.cards_resources)
+
+      // ----------------------
+      // Function timeline
+      // ----------------------
 
       await this.createMap();
       await this.roomsAdd();
-      this.afterGame();
+      this.whileGame();
    }
    async roomsAdd() {
-      //dodanie pokoji
 
+      my_WS.mySend("joinRoom", { name: "Ziomeczek" })
 
+      // ---------------------------------
+      // Nasłuch wiadomości od serwera
+      // o dodaniu do pokoju
+      // ---------------------------------
+
+      let messageFunc = null;
+
+      await new Promise(res => {
+
+         messageFunc = (ev) => {
+            /**@type {{type:String, data:String}} */
+            let parsedData = JSON.parse(ev.data);
+
+            if (parsedData.type == "onAddedToRoom") {
+               console.log(parsedData.data)
+               res();
+            }
+         }
+
+         my_WS.addEventListener("message", messageFunc)
+      })
+
+      my_WS.removeEventListener("message", messageFunc)
    }
 
-   afterGame() {
+   whileGame() {
 
       this.card_move_manager = new CardMoveManager(this.camera, this.game_board, this.cards);
    }
 
 
    async createMap() {
+      console.log("siemka")
+      this.game_board = new Game_Board();
+      this.scene.add(this.game_board)
 
 
       // ------------
@@ -144,10 +161,5 @@ export default class Main {
          this.cards.push(card);
          this.scene.add(card)
       }
-
-
-      console.log("siemka")
-      this.game_board = new Game_Board();
-      this.scene.add(this.game_board)
    }
 }
