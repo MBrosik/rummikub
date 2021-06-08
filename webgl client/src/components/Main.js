@@ -17,6 +17,8 @@ import Game_Board from './modules/map_elements/Game_Board';
 import Card from './modules/map_elements/Card';
 import { BOARD_SIZE } from './modules/settings/board_info';
 import CardMoveManager from './modules/after_game/CardMoveManager';
+import AddIntoRooms from './modules/initial/AddIntoRooms';
+import Interface from './modules/initial/Interface';
 
 
 
@@ -71,10 +73,26 @@ export default class Main {
       /**@type {CardMoveManager} */
       this.card_move_manager = undefined;
 
+      //nick
+      this.nick = "halo";
 
-      this.init()
+
+
+      this.initial();
+      // this.init();
+   }
+   initial() {
+      this.addIntoRooms = new AddIntoRooms(this.play.bind(this));
+   }
+   play(nick) {
+      this.nick = nick;
+      this.divToClose = document.getElementById("startDiv");
+      this.divToClose.style.display = "none";
+      this.allNicks = [{ nick: this.nick }, { nick: "user2" }, { nick: "user3" }, { nick: "user4" }]
+      this.init();
    }
    async init() {
+      console.log(this.nick)
       // ----------------------
       // Get Card resources
       // ----------------------
@@ -94,7 +112,9 @@ export default class Main {
    }
    async roomsAdd() {
 
-      my_WS.mySend("joinRoom", { name: "Ziomeczek" })
+      this.interface = new Interface();
+
+      my_WS.mySend("joinRoom", { name: this.nick })
 
       // ---------------------------------
       // Nasłuch wiadomości od serwera
@@ -118,6 +138,8 @@ export default class Main {
          my_WS.addEventListener("message", messageFunc)
       })
 
+      this.interface.insertNicks(this.allNicks)
+
       my_WS.removeEventListener("message", messageFunc)
    }
 
@@ -136,8 +158,9 @@ export default class Main {
       // ------------
       // light
       // ------------
-      this.light = new DirectionalLight(0xffff00, 10);
-      this.light.position.set(50, 50, 50);
+      this.light = new DirectionalLight(0xffffee, 10);
+      this.light.intensity = 0.7;
+      this.light.position.set(0, 1200, -400);
       this.scene.add(this.light)
 
 
