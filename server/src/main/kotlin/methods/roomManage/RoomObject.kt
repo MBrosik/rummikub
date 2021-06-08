@@ -50,6 +50,13 @@ object RoomObject {
             println(x.playerList)
         }
 
+        /**
+         * Sprawdzanie, czy pokój jest zapełniony
+         */
+        if (room.playerList.size == 4){
+            room.roomStatus = RoomStatus.WhileGame;
+        }
+
 
         /**
          * Odesłanie klientowi wiadomości o dodaniu do pokoju
@@ -59,5 +66,6 @@ object RoomObject {
     }
     fun removeFromRoom(userData: SessionStructure){
         userData.roomClass!!.playerList.removeIf { it.session == userData.session}
+        roomList.removeIf { it.playerList.size == 0 }
     }
 }
