@@ -103,7 +103,7 @@ export default class Main {
 
       let messageFunc = null;
 
-      await new Promise(res => {
+      new Promise(res => {
 
          messageFunc = (ev) => {
             /**@type {{type:String, data:String}} */
@@ -116,9 +116,34 @@ export default class Main {
          }
 
          my_WS.addEventListener("message", messageFunc)
+      }).then(() => {
+         my_WS.removeEventListener("message", messageFunc)
       })
 
-      my_WS.removeEventListener("message", messageFunc)
+
+
+      // ---------------------
+      // check for game begin
+      // ---------------------
+
+      let messageFunc1 = null;
+
+      await new Promise(res => {
+
+         messageFunc1 = (ev) => {
+            /**@type {{type:String, data:String}} */
+            let parsedData = JSON.parse(ev.data);
+
+            if (parsedData.type == "GameStarted") {
+               console.log(parsedData.data)
+               res();
+            }
+         }
+
+         my_WS.addEventListener("message", messageFunc1)
+      })
+
+      my_WS.removeEventListener("message", messageFunc1)
    }
 
    whileGame() {
