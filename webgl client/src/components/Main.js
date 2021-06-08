@@ -123,7 +123,7 @@ export default class Main {
 
    whileGame() {
 
-      this.card_move_manager = new CardMoveManager(this.camera, this.game_board, this.cards);
+      this.card_move_manager = new CardMoveManager(this.camera, this.game_board, this.cards, this.renderer);
    }
 
 
