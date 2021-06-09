@@ -1,3 +1,4 @@
+import { Renderer } from "../main_webgl_modules/Renderer";
 import Card from "../map_elements/Card";
 import { BOARD_SIZE, FIELDS_COUNT } from "../settings/board_info";
 import CameraColider from "../utils/CameraColider";
@@ -8,11 +9,13 @@ export default class CardMoveManager {
     * @param {import("../main_webgl_modules/Camera").default} this.camera
     * @param {Card[]} cards 
     * @param {import("../map_elements/Game_Board").default} game_board 
+    * @param {Renderer} renderer
     */
-   constructor(camera, game_board, cards) {
+   constructor(camera, game_board, cards, renderer) {
       this.camera = camera
       this.game_board = game_board;
       this.cards = cards;
+      this.renderer = renderer;
 
       /**@type {Card} */
       this.selected_card = undefined;
@@ -46,7 +49,7 @@ export default class CardMoveManager {
     * @param {MouseEvent} e 
     */
    mousedown_ev(e) {
-      if (this.selected_card != undefined) return
+      if (this.selected_card != undefined || e.target != this.renderer.domElement) return
 
 
       /**
