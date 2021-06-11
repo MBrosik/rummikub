@@ -46,6 +46,16 @@ object RoomObject {
             println(x.playerList)
         }
 
+
+        /**
+         * Odesłanie klientowi wiadomości o dodaniu do pokoju
+         */
+        val sendMess = MessageData("onAddedToRoom", "Zostałeś dodany do pokoju!")
+        userData.session.remote.sendString(Gson().toJson(sendMess))
+
+
+
+
         /**
          * Sprawdzanie, czy pokój jest zapełniony
          */
@@ -53,13 +63,6 @@ object RoomObject {
             room.roomStatus = RoomStatus.WhileGame;
             room.whileGame();
         }
-
-
-        /**
-         * Odesłanie klientowi wiadomości o dodaniu do pokoju
-         */
-        val sendMess = MessageData("onAddedToRoom", "Zostałeś dodany do pokoju!")
-        userData.session.remote.sendString(Gson().toJson(sendMess))
     }
 
     fun removeFromRoom(userData: SessionStructure) {

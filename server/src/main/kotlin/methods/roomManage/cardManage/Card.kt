@@ -2,6 +2,6 @@ package main.kotlin.methods.roomManage.cardManage
 
 data class Card(
     var ID:Int,
-    var number:Int,
+    var name:String,
     var color:colorTypes
 )
