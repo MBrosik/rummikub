@@ -49,7 +49,8 @@ export default class CardMoveManager {
     * @param {MouseEvent} e 
     */
    mousedown_ev(e) {
-      if (this.selected_card != undefined || e.target != this.renderer.domElement) return
+      if (this.selected_card != undefined) return
+      // if (this.selected_card != undefined || e.target != this.renderer.domElement) return
 
 
       /**

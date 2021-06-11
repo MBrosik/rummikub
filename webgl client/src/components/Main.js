@@ -105,12 +105,13 @@ export default class Main {
       // ----------------------
 
       await this.createMap();
-      await this.roomsAdd();
       this.whileGame();
+      await this.roomsAdd();
    }
    async roomsAdd() {
 
       this.interface = new Interface(this.camera, this.container);
+      this.interface.insertNicks(this.allNicks)
 
       my_WS.mySend("joinRoom", { name: this.nick })
 
@@ -161,7 +162,6 @@ export default class Main {
          my_WS.addEventListener("message", messageFunc1)
       })
 
-      this.interface.insertNicks(this.allNicks)
 
       my_WS.removeEventListener("message", messageFunc1)
    }
@@ -191,7 +191,7 @@ export default class Main {
       // append Cards
       // ----------------------
       let card = new Card(
-         this.cards_resources["Card1"].geometry,
+         this.cards_resources["black_1"].geometry,
          new Vector3(100, BOARD_POSITION.y + (BOARD_SIZE.height / 2), 100),
          this.game_board
       );
@@ -200,7 +200,7 @@ export default class Main {
 
       {
          let card = new Card(
-            this.cards_resources["Card1"].geometry,
+            this.cards_resources["orange_9"].geometry,
             new Vector3(0, BOARD_POSITION.y + (BOARD_SIZE.height / 2), 0),
             this.game_board
          );
