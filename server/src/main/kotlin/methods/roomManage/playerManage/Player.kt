@@ -8,4 +8,5 @@ class Player(
     val nick:String
 ){
     val CardsInHand = mutableListOf<Card>()
+    var firstMove = false;
 }

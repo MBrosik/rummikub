@@ -8,7 +8,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage
 import org.eclipse.jetty.websocket.api.annotations.WebSocket
 import java.io.IOException
-import kotlin.collections.ArrayList
 
 
 object WebSocketObject {
@@ -91,9 +90,15 @@ object WebSocketObject {
              * filtrowanie wiadomości
              */
             val parsedMessage = Gson().fromJson(message, MessageData::class.java)
+            val userData = sessions[user.hashCode()]!!
 
             when(parsedMessage.type){
                 "joinRoom"-> RoomObject.searchForRoom(sessions[user.hashCode()]!!, parsedMessage.data)
+                "playerTurn" -> {
+                    if(userData.roomClass != null){
+                        userData.roomClass!!.playerFinishedTurn(userData, parsedMessage.data)
+                    }
+                }
             }
 
 

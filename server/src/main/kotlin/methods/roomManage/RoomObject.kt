@@ -60,8 +60,7 @@ object RoomObject {
          * Sprawdzanie, czy pokój jest zapełniony
          */
         if (room.playerList.size == 4) {
-            room.roomStatus = RoomStatus.WhileGame;
-            room.whileGame();
+            room.startGame();
         }
     }
 
