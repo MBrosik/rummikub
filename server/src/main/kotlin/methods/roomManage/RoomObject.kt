@@ -8,8 +8,8 @@ import main.kotlin.methods.roomManage.playerManage.Player
 object RoomObject {
     val roomList = mutableListOf<Room>()
 
-    fun searchForRoom(userData: SessionStructure, messageData:Any){
-        if(userData.roomClass != null) return
+    fun searchForRoom(userData: SessionStructure, messageData: Any) {
+        if (userData.roomClass != null) return
 
         /**
          * rzutowanie danych
@@ -17,24 +17,20 @@ object RoomObject {
         val parsedData = messageData as MutableMap<String, String>
 
 
-
-
         /**
          * Wyszukiwanie wolnych pokoi
          */
-        val availableRooms = roomList.filter { it.playerList.size < 4}
+        val availableRooms = roomList.filter {
+            it.playerList.size < 4 && it.roomStatus == RoomStatus.BeforeGame
+        }
 
-        val room:Room;
-        if(availableRooms.isEmpty()){
+        val room: Room;
+        if (availableRooms.isEmpty()) {
             room = Room()
             roomList.add(room)
-        }
-        else{
+        } else {
             room = availableRooms[0];
         }
-
-
-
 
 
         /**
@@ -46,26 +42,28 @@ object RoomObject {
         println("----------------")
         println("Pokoje:")
         println("----------------")
-        for (x in roomList){
+        for (x in roomList) {
             println(x.playerList)
         }
 
         /**
          * Sprawdzanie, czy pokój jest zapełniony
          */
-        if (room.playerList.size == 4){
+        if (room.playerList.size == 4) {
             room.roomStatus = RoomStatus.WhileGame;
+            room.whileGame();
         }
 
 
         /**
          * Odesłanie klientowi wiadomości o dodaniu do pokoju
          */
-        val sendMess = MessageData("onAddedToRoom","Zostałeś dodany do pokoju!")
+        val sendMess = MessageData("onAddedToRoom", "Zostałeś dodany do pokoju!")
         userData.session.remote.sendString(Gson().toJson(sendMess))
     }
-    fun removeFromRoom(userData: SessionStructure){
-        userData.roomClass!!.playerList.removeIf { it.session == userData.session}
+
+    fun removeFromRoom(userData: SessionStructure) {
+        userData.roomClass!!.playerList.removeIf { it.session == userData.session }
         roomList.removeIf { it.playerList.size == 0 }
     }
 }
