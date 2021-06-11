@@ -3,6 +3,11 @@ export const FIELDS_COUNT = {
    z: 10,
 }
 
+export const BOARD_POSITION = {
+   x: 0,
+   y: 200,
+   z: 0,
+}
 
 export const BOARD_SIZE = {
    width: 400,

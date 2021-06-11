@@ -1,5 +1,5 @@
 import Card from "../map_elements/Card";
-import { BOARD_SIZE, FIELDS_COUNT } from "../settings/board_info";
+import { BOARD_SIZE, FIELDS_COUNT, BOARD_POSITION } from "../settings/board_info";
 import CameraColider from "../utils/CameraColider";
 
 
@@ -81,7 +81,8 @@ export default class CardMoveManager {
        */
       let startX = x - (BOARD_SIZE.width / 2);
       let startZ = z - (BOARD_SIZE.depth / 2);
-
+      // let startX = x - (400 / 2);
+      // let startZ = z - (400 / 2);
       /** 
        * Wyszukuję w którym punkcie kliknąłem tabelę
        */

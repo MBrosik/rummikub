@@ -4,7 +4,7 @@ import {
    MeshPhongMaterial,
    TextureLoader
 } from "three";
-import { BOARD_SIZE } from "../settings/board_info";
+import { BOARD_SIZE, BOARD_POSITION } from "../settings/board_info";
 import board1 from "../../../resources/images/board/Wood026_2K_Color.jpg";
 import board2 from "../../../resources/images/board/Wood026_2K_Displacement.jpg"
 import board3 from "../../../resources/images/board/Wood026_2K_Normal.jpg"
@@ -24,9 +24,8 @@ export default class Game_Board extends Mesh {
          map: new TextureLoader().load(board1),
          bumpMap: new TextureLoader().load(board4)
       })
-
       super(geometry, material)
-
+      this.position.set(BOARD_POSITION.x, BOARD_POSITION.y, BOARD_POSITION.z);
 
       let wireframe = new Mesh(geometry.clone(), material.clone())
       wireframe.material.wireframe = true;

@@ -6,8 +6,6 @@ import {
    Vector3
 } from 'three';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-
 import { Renderer } from './modules/main_webgl_modules/Renderer';
 import Camera from './modules/main_webgl_modules/Camera';
 import { Keyboard } from './modules/main_webgl_modules/Keyboard_Manager';
@@ -15,7 +13,7 @@ import { my_WS, WS_Class } from './modules/WebSocket';
 import LoadCards from './modules/utils/LoadCards';
 import Game_Board from './modules/map_elements/Game_Board';
 import Card from './modules/map_elements/Card';
-import { BOARD_SIZE } from './modules/settings/board_info';
+import { BOARD_SIZE, BOARD_POSITION } from './modules/settings/board_info';
 import CardMoveManager from './modules/after_game/CardMoveManager';
 import AddIntoRooms from './modules/initial/AddIntoRooms';
 import Interface from './modules/initial/Interface';
@@ -112,7 +110,7 @@ export default class Main {
    }
    async roomsAdd() {
 
-      this.interface = new Interface();
+      this.interface = new Interface(this.camera, this.container);
 
       my_WS.mySend("joinRoom", { name: this.nick })
 
@@ -160,7 +158,7 @@ export default class Main {
       // ------------
       this.light = new DirectionalLight(0xffffee, 10);
       this.light.intensity = 0.7;
-      this.light.position.set(0, 1200, -400);
+      this.light.position.set(0, 1200, 0);
       this.scene.add(this.light)
 
 
@@ -169,7 +167,7 @@ export default class Main {
       // ----------------------
       let card = new Card(
          this.cards_resources["Card1"].geometry,
-         new Vector3(100, (BOARD_SIZE.height / 2), 100),
+         new Vector3(100, BOARD_POSITION.y + (BOARD_SIZE.height / 2), 100),
          this.game_board
       );
       this.cards.push(card);
@@ -178,7 +176,7 @@ export default class Main {
       {
          let card = new Card(
             this.cards_resources["Card1"].geometry,
-            new Vector3(0, (BOARD_SIZE.height / 2), 0),
+            new Vector3(0, BOARD_POSITION.y + (BOARD_SIZE.height / 2), 0),
             this.game_board
          );
          this.cards.push(card);
