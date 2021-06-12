@@ -98,8 +98,6 @@ object WebSocketObject {
             println(parsedMessage.data::class.java)
             val userData = sessions[user.hashCode()]!!
 
-            val aa:dynamic ="asdasd" 
-
             when(parsedMessage.type){
                 "joinRoom"-> RoomObject.searchForRoom(sessions[user.hashCode()]!!, parsedMessage.data)
                 "playerTurn" -> {

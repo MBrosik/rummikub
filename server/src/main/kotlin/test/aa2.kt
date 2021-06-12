@@ -143,3 +143,27 @@
 //
 //    }
 //}
+
+
+
+//        // -----------
+//        // board
+//        // -----------
+//        val changeBoardTableA = parsedSendData.boardCards.toMutableList() // if added to board
+//        changeBoardTableA.removeAll(board.cards)
+//
+//        val changeBoardTableB = board.cards.toMutableList() // if removed from board
+//        changeBoardTableB.removeAll(parsedSendData.boardCards)
+//
+//
+//        // -----------
+//        // in hand
+//        // -----------
+//        val changeInHandTableA = parsedSendData.inHandCards.toMutableList() // if added to hand
+//        changeInHandTableA.removeAll(playerObject.CardsInHand)
+//
+//        val changeInHandTableB = playerObject.CardsInHand.toMutableList() // if removed from hand
+//        changeInHandTableB.removeAll(parsedSendData.inHandCards)
+//
+//        val notAddedCard = changeBoardTableA.toMutableList();
+//        notAddedCard.removeAll()

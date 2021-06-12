@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import main.kotlin.methods.WebSocket.MessageData
 import main.kotlin.methods.WebSocket.SessionStructure
+import main.kotlin.methods.WebSocket.WebSocketObject
 import main.kotlin.methods.roomManage.cardManage.Card
 import main.kotlin.methods.roomManage.cardManage.colorTypes
 import main.kotlin.methods.roomManage.playerManage.Player
@@ -18,6 +19,7 @@ import kotlin.math.floor
 class Room() {
     val playerList = mutableListOf<Player>()
     var roomStatus: RoomStatus = RoomStatus.BeforeGame
+    val allCards = mutableListOf<Card>()
     val availableCards = mutableListOf<Card>()
 
     var whoseTurn = 0;
@@ -42,6 +44,7 @@ class Room() {
                 id++
             }
         }
+        allCards.addAll(availableCards);
 
         availableCards.forEach {
             val card = Gson().toJson(
@@ -109,38 +112,73 @@ class Room() {
 
 
     fun gameTurn() {
-
-        playerList.forEach {
-            val send = MessageData(
-                "WhileGame",
-                board.cards,
-            )
-            it.session.remote.sendString(Gson().toJson(send));
-        }
-
         corountine = CoroutineScope(EmptyCoroutineContext);
         corountine.launch {
-            delay(60000)
-            board.curentCards.clear();
-            gameTurn();
+            val winnerPlayer = playerList.find { it.CardsInHand.size == 0 }
+
+            if (winnerPlayer == null) {
+                playerList.forEach {
+                    val send = MessageData(
+                        "WhileGame",
+                        mutableMapOf<String, Any>(
+                            "boardCards" to board.cards,
+                            "inHandCards" to it.CardsInHand,
+                            "whoseTurn" to whoseTurn,
+                            Pair("turn", playerList[whoseTurn].session == it.session)
+                        ),
+                    )
+                    it.session.remote.sendString(Gson().toJson(send));
+                }
+
+                delay(60000)
+                board.curentCards.clear();
+
+                whoseTurn++;
+                if (whoseTurn == 4) whoseTurn = 0;
+                gameTurn();
+            }
+            else{
+                roomStatus = RoomStatus.GameEnded;
+
+                playerList.forEach {
+                    val send = MessageData(
+                        "GameEnded",
+                        mutableMapOf<String, Any>(
+                            "winnerName" to winnerPlayer.nick,
+                            "youAreWinner" to (it == winnerPlayer)
+                        ),
+                    )
+                    WebSocketObject.sessions[it.hashCode()]!!.roomClass = null
+                    it.session.remote.sendString(Gson().toJson(send));
+                }
+            }
         }
     }
 
     fun playerFinishedTurn(userData: SessionStructure, sendData: Any) {
+        val playerObject = playerList.find { it.session == userData.session }!!
         println(sendData);
-        println(PlayerMessage(cards = mutableListOf(Card(1,"1",colorTypes.red))))
-        println(sendData::class.java)
 
-        val parsedSendData = sendData as PlayerMessage;
-        if(userData.session != playerList[whoseTurn].session) return;
+        val parsedSendData = Gson().fromJson(Gson().toJson(sendData), PlayerMessage::class.java);
+        if (userData.session != playerList[whoseTurn].session) return;
 
-        if (parsedSendData.cards.find { it.x == null || it.y == null } != null) {
+
+        // -------------------------------
+        // check if everyone has position
+        // -------------------------------
+        println("");
+        println("Found Card:")
+        println(parsedSendData.boardCards.find { it.x == null || it.y == null } == null)
+
+
+        if (parsedSendData.boardCards.find { it.x == null || it.y == null } == null) {
+
 
             // -----------------
             // set min max
             // -----------------
-            val xTable = parsedSendData.cards.map { it.x!!.toDouble() }.sorted();
-            val yTable = parsedSendData.cards.map { it.y!!.toDouble() }.sorted();
+            val xTable = parsedSendData.boardCards.map { it.x!!.toDouble() }.sorted();
+            val yTable = parsedSendData.boardCards.map { it.y!!.toDouble() }.sorted();
 
             val minX = xTable[0].toInt();
             val maxX = xTable[xTable.size - 1].toInt();
@@ -160,14 +198,14 @@ class Room() {
 
                 for (x in (minX..maxX)) {
 
-                    if(!everythingOK) break
+                    if (!everythingOK) break
 
                     // ----------------
                     // check if null
                     // ----------------
-                    val card = parsedSendData.cards.find { it.x == x && it.y == y }
+                    val card = parsedSendData.boardCards.find { it.x == x && it.y == y }
 
-                    if(card != null && x == maxX){
+                    if (card != null && x == maxX) {
                         searchTable.add(card)
                     }
 
@@ -279,8 +317,8 @@ class Room() {
                                                 && !(nextCard.name == nextNumber.toString()
                                                         && nextCard.color == firstCard!!.color)
                                             ) {
-                                                    everythingOK = false;
-                                                    break
+                                                everythingOK = false;
+                                                break
                                             }
 
                                             // --------------------------------
@@ -289,14 +327,13 @@ class Room() {
                                             if (
                                                 type == cardArrangement.byColors
                                             ) {
-                                                if(
+                                                if (
                                                     nextCard.name == firstCard!!.name
                                                     && nextCard.color != firstCard!!.color
                                                     && takenColors.find { it == nextCard.color.toString() } == null // check if color not exists
-                                                ){
+                                                ) {
                                                     takenColors.add(nextCard.color.toString())
-                                                }
-                                                else{
+                                                } else {
                                                     everythingOK = false;
                                                 }
                                             }
@@ -315,11 +352,14 @@ class Room() {
                 if (!everythingOK) break;
             }
 
-            if(everythingOK){
-                board.cards = parsedSendData.cards
+            if (everythingOK) {
+                board.cards = parsedSendData.boardCards
+                playerObject.CardsInHand = parsedSendData.inHandCards
             }
         }
         board.curentCards.clear();
+        whoseTurn++;
+        if (whoseTurn == 4) whoseTurn = 0;
 
         corountine.cancel();
 

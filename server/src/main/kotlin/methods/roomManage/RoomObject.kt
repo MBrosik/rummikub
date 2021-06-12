@@ -50,7 +50,7 @@ object RoomObject {
         /**
          * Odesłanie klientowi wiadomości o dodaniu do pokoju
          */
-        val sendMess = MessageData("onAddedToRoom", "Zostałeś dodany do pokoju!")
+        val sendMess = MessageData("onAddedToRoom", mutableMapOf("aa" to "Zostałeś dodany do pokoju!"))
         userData.session.remote.sendString(Gson().toJson(sendMess))
 
 

@@ -5,6 +5,6 @@ data class Card(
     var name:String,
     var color:colorTypes,
 
-    var x:Number? = null,
-    var y:Number? = null,
+    var x:Int? = null,
+    var y:Int? = null,
 )
