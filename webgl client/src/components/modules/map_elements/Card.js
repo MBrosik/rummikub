@@ -1,4 +1,5 @@
 import {
+   Box3,
    BufferGeometry,
    Group,
    Mesh,
@@ -9,6 +10,7 @@ import {
 } from "three"
 
 export default class Card extends Object3D {
+   // export default class Card extends Mesh {
    /**    
     * @param {Group} geometry 
     * @param {Vector3} position 
@@ -16,13 +18,18 @@ export default class Card extends Object3D {
     */
    constructor(mesh, position, board) {
 
-
+      // let {geometry, material} = mesh
       // super(geometry, material)
       super();
-      this.add(mesh);
+      this.add(mesh.clone());
+      // this.cop
 
+      let box = new Box3().setFromObject(this)
+
+      let scale = (20 / box.getSize().x)
+      this.scale.set(scale, scale, scale)
       this.position.copy(position)
-      this.rotateX(-Math.PI / 2)
+      // this.rotateX(-Math.PI / 2)
       this.board = board;
    }
 }

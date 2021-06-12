@@ -27,6 +27,15 @@ export default class CardMoveManager {
       // camera Coliders
       // ------------------
       this.cardsCameraColider = new CameraColider(this.camera, ...this.cards)
+
+      // let card_arr = this.cards.map(el=>el.children.map())
+      // let card_arr = [];
+
+      // this.cards.forEach(el=>{
+      //    card_arr.push(...el.children)
+      // })
+
+      // this.cardsCameraColider = new CameraColider(this.camera, ...card_arr)
       this.gameBoardCameraColider = new CameraColider(this.camera, this.game_board)
 
 
@@ -57,7 +66,7 @@ export default class CardMoveManager {
        * szukanie karty do "złapania"
        */
       console.log(this.cardsCameraColider.getIntersects(e));
-      this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object;
+      this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object.parent.parent;
 
       /**
        * Zmiana cursora jeżeli złapę obiekt
@@ -87,10 +96,12 @@ export default class CardMoveManager {
       let startZ = z - (BOARD_SIZE.depth / 2);
       // let startX = x - (400 / 2);
       // let startZ = z - (400 / 2);
+
       /** 
        * Wyszukuję w którym punkcie kliknąłem tabelę
        */
       this.board_intersect = this.gameBoardCameraColider.getIntersects(e)[0]
+
 
       if (this.board_intersect == undefined) return;
 
