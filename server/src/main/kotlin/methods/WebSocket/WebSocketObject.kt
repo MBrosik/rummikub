@@ -90,7 +90,15 @@ object WebSocketObject {
              * filtrowanie wiadomości
              */
             val parsedMessage = Gson().fromJson(message, MessageData::class.java)
+
+
+            println("parsedMessage")
+            println(parsedMessage)
+            println(parsedMessage::class.java)
+            println(parsedMessage.data::class.java)
             val userData = sessions[user.hashCode()]!!
+
+            val aa:dynamic ="asdasd" 
 
             when(parsedMessage.type){
                 "joinRoom"-> RoomObject.searchForRoom(sessions[user.hashCode()]!!, parsedMessage.data)

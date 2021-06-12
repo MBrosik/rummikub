@@ -113,6 +113,7 @@ export default class Main {
    async roomsAdd() {
 
       this.interface = new Interface();
+      this.interface.insertNicks(this.allNicks)
 
       my_WS.mySend("joinRoom", { name: this.nick })
 
@@ -163,9 +164,11 @@ export default class Main {
          my_WS.addEventListener("message", messageFunc1)
       })
 
-      this.interface.insertNicks(this.allNicks)
-
       my_WS.removeEventListener("message", messageFunc1)
+      my_WS.addEventListener("message", (e) => {
+         console.log(JSON.parse(e.data))
+      })
+
    }
 
    whileGame() {
