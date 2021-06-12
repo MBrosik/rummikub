@@ -1,5 +1,6 @@
 import {
    BufferGeometry,
+   Group,
    Mesh,
    MeshBasicMaterial,
    MeshPhongMaterial,
@@ -7,17 +8,18 @@ import {
    Vector3
 } from "three"
 
-export default class Card extends Mesh {
+export default class Card extends Object3D {
    /**    
-    * @param {BufferGeometry} geometry 
+    * @param {Group} geometry 
     * @param {Vector3} position 
     * @param {import("./Game_Board").default} board        
     */
-   constructor(geometry, position, board) {
-      let material = new MeshPhongMaterial({})
+   constructor(mesh, position, board) {
 
 
-      super(geometry, material)
+      // super(geometry, material)
+      super();
+      this.add(mesh);
 
       this.position.copy(position)
       this.rotateX(-Math.PI / 2)

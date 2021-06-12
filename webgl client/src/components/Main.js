@@ -95,7 +95,6 @@ export default class Main {
       // Get Card resources
       // ----------------------
 
-      /**@type {import("./modules/utils/LoadCards").cardObject} */
       this.cards_resources = await LoadCards();
 
       console.log(this.cards_resources)
@@ -191,7 +190,7 @@ export default class Main {
       // append Cards
       // ----------------------
       let card = new Card(
-         this.cards_resources["black_1"].geometry,
+         this.cards_resources["black_1"].mesh,
          new Vector3(100, BOARD_POSITION.y + (BOARD_SIZE.height / 2), 100),
          this.game_board
       );
@@ -200,7 +199,7 @@ export default class Main {
 
       {
          let card = new Card(
-            this.cards_resources["orange_9"].geometry,
+            this.cards_resources["orange_9"].mesh,
             new Vector3(0, BOARD_POSITION.y + (BOARD_SIZE.height / 2), 0),
             this.game_board
          );

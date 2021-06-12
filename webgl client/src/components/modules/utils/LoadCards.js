@@ -1,6 +1,6 @@
 // import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
-import { BufferGeometry } from 'three'
+import { BufferGeometry, Group } from 'three'
 
 import black_1 from "../../../resources/models/Cards/FBX do zamiany/1-black.fbx"
 import blue_1 from "../../../resources/models/Cards/FBX do zamiany/1-blue.fbx"
@@ -54,6 +54,8 @@ import black_13 from "../../../resources/models/Cards/FBX do zamiany/13-black.fb
 import blue_13 from "../../../resources/models/Cards/FBX do zamiany/13-blue.fbx"
 import red_13 from "../../../resources/models/Cards/FBX do zamiany/13-red.fbx"
 import orange_13 from "../../../resources/models/Cards/FBX do zamiany/13-orange.fbx"
+import black_joker from "../../../resources/models/Cards/FBX do zamiany/joker-black.fbx"
+import red_joker from "../../../resources/models/Cards/FBX do zamiany/joker-red.fbx"
 
 // import Card1 from "../../../resources/models/Cards/rummikub 1_fixed.stl"
 // import Card2 from "../../../resources/models/Cards/rummikub 2_fixed.stl"
@@ -105,9 +107,10 @@ import orange_13 from "../../../resources/models/Cards/FBX do zamiany/13-orange.
 export default async function LoadCards() {
    let cardsLinks = {
       black_1, blue_1, red_1, orange_1, black_2, blue_2, red_2, orange_2, black_3, blue_3, red_3, orange_3, black_4, blue_4, red_4, orange_4, black_5, blue_5, red_5, orange_5, black_6, blue_6, red_6, orange_6, black_7, blue_7, red_7,
-      orange_7, black_8, blue_8, red_8, orange_8, black_9, blue_9, red_9, orange_9, black_10, blue_10, red_10, orange_10, black_11, blue_11, red_11, orange_11, black_12, blue_12, red_12, orange_12, black_13, blue_13, red_13, orange_13
+      orange_7, black_8, blue_8, red_8, orange_8, black_9, blue_9, red_9, orange_9, black_10, blue_10, red_10, orange_10, black_11, blue_11, red_11, orange_11, black_12, blue_12, red_12, orange_12, black_13, blue_13, red_13, orange_13,
+      black_joker, red_joker,
    }
-   /**@type {cardObject} */
+   /**@type {{[x:string]: {mesh:Group}}} */
    let cardObject = {};
    /**@type {Promise<any>[]} */
    let promiseTable = [];
