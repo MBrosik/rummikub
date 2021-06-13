@@ -52,7 +52,7 @@ export default class addIntoRooms {
         this.allNicks.forEach(element => {
             this.newText = document.createElement('p');
             this.newText.className = "newText";
-            this.newText.innerText = element.nick;
+            this.newText.innerText = element.players;
             let id = this.allNicks.indexOf(element);
             this.divs[id].appendChild(this.newText);
         });

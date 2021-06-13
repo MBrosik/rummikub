@@ -1,6 +1,6 @@
 import { Renderer } from "../main_webgl_modules/Renderer";
 import Card from "../map_elements/Card";
-import { BOARD_SIZE, FIELDS_COUNT, BOARD_POSITION } from "../settings/board_info";
+import { BOARD_SIZE, FIELDS_COUNT, BOARD_POSITION, SMALLER_SIZE_X } from "../settings/board_info";
 import CameraColider from "../utils/CameraColider";
 
 
@@ -11,9 +11,10 @@ export default class CardMoveManager {
     * @param {import("../map_elements/Game_Board").default} game_board 
     * @param {Renderer} renderer
     */
-   constructor(camera, game_board, cards, renderer) {
+   constructor(camera, meshees, cards, renderer) {
       this.camera = camera
-      this.game_board = game_board;
+      this.meshees = meshees;
+      this.game_board = meshees[0];
       this.cards = cards;
       this.renderer = renderer;
 
@@ -36,7 +37,8 @@ export default class CardMoveManager {
       // })
 
       // this.cardsCameraColider = new CameraColider(this.camera, ...card_arr)
-      this.gameBoardCameraColider = new CameraColider(this.camera, this.game_board)
+      console.log(this.game_board)
+      this.gameBoardCameraColider = new CameraColider(this.camera, this.meshees)
 
 
       // ------------------
@@ -59,14 +61,17 @@ export default class CardMoveManager {
     */
    mousedown_ev(e) {
       if (this.selected_card != undefined) return
+      e.preventDefault();
       // if (this.selected_card != undefined || e.target != this.renderer.domElement) return
 
 
       /**
        * szukanie karty do "złapania"
        */
-      console.log(this.cardsCameraColider.getIntersects(e));
+      // console.log(this.cardsCameraColider.getIntersects(e));
       this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object.parent.parent;
+      // this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object;
+      // console.log(this.selected_card)
 
       /**
        * Zmiana cursora jeżeli złapę obiekt
@@ -93,14 +98,15 @@ export default class CardMoveManager {
        * Obliczam wierzchołek lewy górny planszy
        */
       let startX = x - (BOARD_SIZE.width / 2);
-      let startZ = z - (BOARD_SIZE.depth / 2);
+      let startZ = z - ((BOARD_SIZE.depth) / 2);
       // let startX = x - (400 / 2);
       // let startZ = z - (400 / 2);
 
       /** 
        * Wyszukuję w którym punkcie kliknąłem tabelę
        */
-      this.board_intersect = this.gameBoardCameraColider.getIntersects(e)[0]
+      this.board_intersect = this.gameBoardCameraColider.getIntersects2(e)[0]
+      // console.log(this.board_intersect)
 
 
       if (this.board_intersect == undefined) return;
@@ -117,9 +123,9 @@ export default class CardMoveManager {
        */
       let field = {
          x: (BOARD_SIZE.width / FIELDS_COUNT.x) / 2,  // względny środek prostokąta
-         z: (BOARD_SIZE.depth / FIELDS_COUNT.z) / 2,  // względny środek prostokąta
+         z: ((BOARD_SIZE.depth + SMALLER_SIZE_X.depth) / FIELDS_COUNT.z) / 2,  // względny środek prostokąta
          width: BOARD_SIZE.width / FIELDS_COUNT.x,
-         depth: BOARD_SIZE.depth / FIELDS_COUNT.z,
+         depth: (BOARD_SIZE.depth + SMALLER_SIZE_X.depth) / FIELDS_COUNT.z,
       }
 
       /**
@@ -131,7 +137,7 @@ export default class CardMoveManager {
        * i jeszcze dodaję pozycję środka danego prostokąta
        */
       let x_floor = Math.max(0, Math.floor((pointX / BOARD_SIZE.width) * FIELDS_COUNT.x - 0.01) * field.width);
-      let y_floor = Math.max(0, Math.floor((pointZ / BOARD_SIZE.depth) * FIELDS_COUNT.z - 0.01) * field.depth);
+      let y_floor = Math.max(0, Math.floor((pointZ / (BOARD_SIZE.depth + SMALLER_SIZE_X.depth)) * FIELDS_COUNT.z - 0.01) * field.depth);
 
       this.selected_card.position.x = startX + x_floor + field.x
       this.selected_card.position.z = startZ + y_floor + field.z

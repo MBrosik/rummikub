@@ -11,7 +11,7 @@ export class WS_Class extends WebSocket {
        * Wywołanie konstructora 
        */
       // super(`ws://${location.hostname}:${5000}/rummikub`)
-      super(`wss://rumikub.herokuapp.com/rummikub`)
+      super(`wss://rumikub2.herokuapp.com/rummikub`)
 
 
       /**
@@ -30,6 +30,10 @@ export class WS_Class extends WebSocket {
     */
    onopen_ev() {
       console.log("onopen")
+      setTimeout(() => {
+         this.mySend("not idle", {})
+         this.onopen_ev()
+      }, 10000)
    }
 
    /**
