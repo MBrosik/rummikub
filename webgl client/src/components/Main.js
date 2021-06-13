@@ -169,6 +169,19 @@ export default class Main {
          console.log(JSON.parse(e.data))
       })
 
+
+      // my_WS.mySend("playerTurn", {
+      //    boardCards: [
+      //       { ID: 1, name: "1", color: "red", x: 1, y: 1 },
+      //       { ID: 1, name: "joker", color: "black", x: 1, y: 1 },
+      //    ],
+
+      //    inHandCards: [
+      //       { ID: 1, name: "1", color: "red", },
+      //       { ID: 1, name: "joker", color: "black", },
+      //    ]
+      // });
+
    }
 
    whileGame() {
