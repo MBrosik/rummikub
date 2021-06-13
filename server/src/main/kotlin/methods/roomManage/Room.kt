@@ -40,7 +40,7 @@ class Room() {
             }
 
             listOf<colorTypes>(colorTypes.black, colorTypes.red).forEach {
-                availableCards.add(Card(id, "Joker", it))
+                availableCards.add(Card(id, "joker", it))
                 id++
             }
         }
@@ -112,47 +112,69 @@ class Room() {
 
 
     fun gameTurn() {
-        corountine = CoroutineScope(EmptyCoroutineContext);
-        corountine.launch {
-            val winnerPlayer = playerList.find { it.CardsInHand.size == 0 }
 
-            if (winnerPlayer == null) {
-                playerList.forEach {
-                    val send = MessageData(
-                        "WhileGame",
-                        mutableMapOf<String, Any>(
-                            "boardCards" to board.cards,
-                            "inHandCards" to it.CardsInHand,
-                            "whoseTurn" to whoseTurn,
-                            Pair("turn", playerList[whoseTurn].session == it.session)
-                        ),
-                    )
-                    it.session.remote.sendString(Gson().toJson(send));
-                }
 
+        // ------------------
+        // check for winner
+        // ------------------
+        val winnerPlayer = playerList.find { it.CardsInHand.size == 0 }
+
+        // ------------------
+        // if winner is null
+        // ------------------
+        if (winnerPlayer == null) {
+            playerList.forEach {
+                val send = MessageData(
+                    "WhileGame",
+                    mutableMapOf<String, Any>(
+                        "boardCards" to board.cards,
+                        "inHandCards" to it.CardsInHand,
+                        "whoseTurn" to whoseTurn,
+                        Pair("turn", playerList[whoseTurn].session == it.session)
+                    ),
+                )
+                it.session.remote.sendString(Gson().toJson(send));
+            }
+
+            // ---------------------
+            // launch Corounitine
+            // ---------------------
+            corountine = CoroutineScope(EmptyCoroutineContext);
+            corountine.launch {
                 delay(60000)
+
                 board.curentCards.clear();
+
+                if (availableCards.size != 0) {
+                    val id = floor(Math.random() * availableCards.size).toInt()
+                    playerList[whoseTurn].CardsInHand.add(availableCards[id])
+                    availableCards.removeAt(id)
+                }
 
                 whoseTurn++;
                 if (whoseTurn == 4) whoseTurn = 0;
                 gameTurn();
             }
-            else{
-                roomStatus = RoomStatus.GameEnded;
 
-                playerList.forEach {
-                    val send = MessageData(
-                        "GameEnded",
-                        mutableMapOf<String, Any>(
-                            "winnerName" to winnerPlayer.nick,
-                            "youAreWinner" to (it == winnerPlayer)
-                        ),
-                    )
-                    WebSocketObject.sessions[it.hashCode()]!!.roomClass = null
-                    it.session.remote.sendString(Gson().toJson(send));
-                }
+        } else {
+            // ------------------
+            // if winner exists
+            // ------------------
+            roomStatus = RoomStatus.GameEnded;
+
+            playerList.forEach {
+                val send = MessageData(
+                    "GameEnded",
+                    mutableMapOf<String, Any>(
+                        "winnerName" to winnerPlayer.nick,
+                        "youAreWinner" to (it == winnerPlayer)
+                    ),
+                )
+                WebSocketObject.sessions[it.hashCode()]!!.roomClass = null
+                it.session.remote.sendString(Gson().toJson(send));
             }
         }
+
     }
 
     fun playerFinishedTurn(userData: SessionStructure, sendData: Any) {
@@ -220,9 +242,9 @@ class Room() {
                         } else {
 
                             // ---------------------
-                            // check if all Joker
+                            // check if all joker
                             // ---------------------
-                            var firstCard = searchTable.find { it.name != "Joker" }
+                            var firstCard = searchTable.find { it.name != "joker" }
 
                             if (firstCard != null) {
                                 var firstIndex = searchTable.indexOf(firstCard);
@@ -242,7 +264,7 @@ class Room() {
                                     while (nextIndex < searchTable.size) {
                                         val nextCard = searchTable[nextIndex];
 
-                                        if (nextCard.name == "Joker") {
+                                        if (nextCard.name == "joker") {
                                             nextIndex++;
                                             nextNumber++;
                                         } else {
@@ -304,9 +326,9 @@ class Room() {
                                         val nextCard = searchTable[nextIndex];
 
                                         // --------------------------------
-                                        // check if next Card isn't Joker
+                                        // check if next Card isn't joker
                                         // --------------------------------
-                                        if (nextCard.name != "Joker") {
+                                        if (nextCard.name != "joker") {
 
                                             // --------------------------------
                                             // if cardArrangement by Numbers
@@ -351,13 +373,18 @@ class Room() {
 
                 if (!everythingOK) break;
             }
-
             if (everythingOK) {
                 board.cards = parsedSendData.boardCards
                 playerObject.CardsInHand = parsedSendData.inHandCards
+            } else if (availableCards.size != 0) {
+                val id = floor(Math.random() * availableCards.size).toInt()
+                playerList[whoseTurn].CardsInHand.add(availableCards[id])
+                availableCards.removeAt(id)
             }
+
         }
         board.curentCards.clear();
+
         whoseTurn++;
         if (whoseTurn == 4) whoseTurn = 0;
 

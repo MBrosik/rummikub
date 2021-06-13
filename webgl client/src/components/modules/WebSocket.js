@@ -10,8 +10,8 @@ export class WS_Class extends WebSocket {
       /**
        * Wywołanie konstructora 
        */
-      super(`ws://${location.hostname}:${5000}/rummikub`)
-      // super(`wss://rumikub.herokuapp.com/rummikub`)      
+      // super(`ws://${location.hostname}:${5000}/rummikub`)
+      super(`wss://rumikub2.herokuapp.com/rummikub`)
 
 
       /**
