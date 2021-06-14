@@ -21,7 +21,7 @@ object RoomObject {
          * Wyszukiwanie wolnych pokoi
          */
         val availableRooms = roomList.filter {
-            it.playerList.size < 4 && it.roomStatus == RoomStatus.BeforeGame
+            it.playerList.filterNotNull().size < 4 && it.roomStatus == RoomStatus.BeforeGame
         }
 
         val room: Room;
@@ -36,7 +36,9 @@ object RoomObject {
         /**
          * Dodanie gracza do pokoju
          */
-        room.playerList.add(Player(userData.session, parsedData["name"]!!))
+        val index = room.playerList.indexOf(null);
+
+        room.playerList[index] = Player(userData.session, parsedData["name"]!!)
         userData.roomClass = room
 
         println("----------------")
@@ -53,19 +55,28 @@ object RoomObject {
         val sendMess = MessageData("onAddedToRoom", mutableMapOf("aa" to "Zostałeś dodany do pokoju!"))
         userData.session.remote.sendString(Gson().toJson(sendMess))
 
-
+        room.sendUsersList();
 
 
         /**
          * Sprawdzanie, czy pokój jest zapełniony
          */
-        if (room.playerList.size == 4) {
+        if (room.playerList.filterNotNull().size== 4) {
             room.startGame();
         }
     }
 
     fun removeFromRoom(userData: SessionStructure) {
-        userData.roomClass!!.playerList.removeIf { it.session == userData.session }
-        roomList.removeIf { it.playerList.size == 0 }
+
+        userData.roomClass!!.playerList.forEachIndexed { ind,it->
+            if(it!!.session == userData.session){
+                userData.roomClass!!.playerList[ind] = null;
+
+                if(userData.roomClass!!.whoseTurn == ind){
+                    userData.roomClass!!.ownerOfTheTurnEnded();
+                }
+            }
+        }
+        roomList.removeIf { it.playerList.filterNotNull().isEmpty() }
     }
 }

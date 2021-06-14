@@ -15,7 +15,7 @@ object WebSocketObject {
      * objekt sesji, jako key przechowujemy hashCode (identyfikator) sesji,
      * a jako value dane np o połączeniu i o pokojach
      */
-    val sessions: MutableMap<Int,SessionStructure> = mutableMapOf()
+    val sessions: MutableMap<Int, SessionStructure> = mutableMapOf()
 
 
     /**
@@ -23,12 +23,10 @@ object WebSocketObject {
      *  do wszystkich dostępnych klientów
      */
     fun broadcast(message: String) {
-        for ((key,value) in sessions) {
+        for ((key, value) in sessions) {
             value.session.remote.sendString(message)
         }
     }
-
-
 
 
     @WebSocket
@@ -61,8 +59,6 @@ object WebSocketObject {
         }
 
 
-
-
         /**
          * działania przy odłączeniu klienta
          */
@@ -74,10 +70,14 @@ object WebSocketObject {
             RoomObject.removeFromRoom(sessions[user.hashCode()]!!)
             sessions.remove(user.hashCode())
 
+            println("")
+            println("")
+            println("")
             println("onClose")
+            println("")
+            println("")
+            println("")
         }
-
-
 
 
         /**
@@ -92,30 +92,34 @@ object WebSocketObject {
             val parsedMessage = Gson().fromJson(message, MessageData::class.java)
 
 
-            println("parsedMessage")
-            println(parsedMessage)
-            println(parsedMessage::class.java)
-            println(parsedMessage.data::class.java)
+            if (parsedMessage.type != "not idle") {
+                println("onMessage")
+//                println("parsedMessage")
+//                println(parsedMessage)
+//                println(parsedMessage::class.java)
+//                println(parsedMessage.data::class.java)
+            }
+
             val userData = sessions[user.hashCode()]!!
 
-            when(parsedMessage.type){
-                "joinRoom"-> RoomObject.searchForRoom(sessions[user.hashCode()]!!, parsedMessage.data)
+            when (parsedMessage.type) {
+                "joinRoom" -> RoomObject.searchForRoom(sessions[user.hashCode()]!!, parsedMessage.data)
                 "playerTurn" -> {
-                    if(userData.roomClass != null){
+                    if (userData.roomClass != null) {
                         userData.roomClass!!.playerFinishedTurn(userData, parsedMessage.data)
                     }
                 }
             }
 
 
-            println("onMessage")
-
 //            println("localAddress: ${user.localAddress}");
 //            println("user.policy: ${user.policy}")
 //            println("user.remote: ${user.remote}")
 //            println("user.remoteAddress: ${user.remoteAddress}")
 //            println("user.protocolVersion: ${user.protocolVersion}")
-            println("user.hashCode: ${user.hashCode()}")
+            if (parsedMessage.type != "not idle") {
+                println("user.hashCode: ${user.hashCode()}")
+            }
         }
     }
 }
