@@ -43,6 +43,10 @@ module.exports = {
             test: /.(stl)$/i,
             type: 'asset/resource',
          },
+         {
+            test: /.(fbx)$/i,
+            type: 'asset/resource',
+         },
       ],
    },
 };

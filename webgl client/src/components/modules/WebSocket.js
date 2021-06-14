@@ -30,6 +30,10 @@ export class WS_Class extends WebSocket {
     */
    onopen_ev() {
       console.log("onopen")
+      setTimeout(() => {
+         this.mySend("not idle", {})
+         this.onopen_ev()
+      }, 10000)
    }
 
    /**

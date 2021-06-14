@@ -83,7 +83,7 @@ h1 {
    justify-content: space-evenly;
 
    .nickDiv {
-      background-color: rgba(23, 3, 134, 0.397);
+      background-color: rgba(2, 72, 224, 0.5);
       border: 3px solid rgb(251, 84, 43);
       width: 300px;
       height: 100px;
@@ -92,4 +92,100 @@ h1 {
       color: white;
       font-size: 20px;
    }
+}
+
+#menu {
+   position: absolute;
+   left: 0;
+   bottom: 100px;
+   width: 50px;
+   height: 250px;
+   background-color: rgba(2, 72, 224, 0.5);
+   // border: 1px solid rgb(251, 84, 43);
+   border-radius: 0px 50px 50px 0px / 25px 25px 25px 0px;
+   font-size: 20px;
+   cursor: pointer;
+   @include flex("true");
+   .menuText {
+      color: white;
+      transform: rotate(-90deg);
+   }
+   #innerContent {
+      @include flex("false");
+      align-items: center;
+      justify-content: flex-end;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 250px;
+      background-color: rgba(2, 72, 224, 0.5);
+      // border: 1px solid rgb(251, 84, 43);
+      border-radius: 0px 50px 50px 0px / 25px 25px 25px 0px;
+      visibility: hidden;
+      transition: all 0.5s ease-in-out;
+      #innerContentText {
+         transition: all 0.5s ease-in-out;
+         color: white;
+         font-size: 20px;
+         opacity: 0;
+         margin-top: -5px;
+         margin-right: 20px;
+      }
+      #toggleControls {
+         position: relative;
+         margin-left: 5px;
+         width: 0;
+         height: 20px;
+         border-radius: 5px;
+         background-color: red;
+         opacity: 0;
+         transition: all 0.5s ease-in-out;
+         visibility: hidden;
+         margin-right: 20px;
+         #toggleHandle {
+            margin-left: 4px;
+            width: 15px;
+            height: 40px;
+            margin-top: -10px;
+            background-color: black;
+            transition: all 0.5s ease-in-out;
+            border-radius: 3px;
+         }
+         // #toggleHandle2 {
+         //    margin-left: 50px;
+         //    width: 15px;
+         //    height: 40px;
+         //    margin-top: -10px;
+         //    background-color: black;
+         //    border-radius: 3px;
+         // }
+      }
+   }
+}
+
+#menu:hover {
+   #innerContent {
+      visibility: visible;
+      width: 350px;
+      #toggleControls {
+         opacity: 70%;
+         width: 70px;
+         visibility: visible;
+      }
+      #innerContentText {
+         visibility: visible;
+         color: white;
+         font-size: 20px;
+         opacity: 100%;
+      }
+   }
+}
+
+
+
+#toggleControls {
+   background: red;
+   width: 120px;
+   height: 40px;
 }

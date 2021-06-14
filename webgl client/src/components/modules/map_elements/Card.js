@@ -1,5 +1,7 @@
 import {
+   Box3,
    BufferGeometry,
+   Group,
    Mesh,
    MeshBasicMaterial,
    MeshPhongMaterial,
@@ -7,20 +9,27 @@ import {
    Vector3
 } from "three"
 
-export default class Card extends Mesh {
+export default class Card extends Object3D {
+   // export default class Card extends Mesh {
    /**    
-    * @param {BufferGeometry} geometry 
+    * @param {Group} geometry 
     * @param {Vector3} position 
     * @param {import("./Game_Board").default} board        
     */
-   constructor(geometry, position, board) {
-      let material = new MeshPhongMaterial({})
+   constructor(mesh, position, board) {
 
+      // let {geometry, material} = mesh
+      // super(geometry, material)
+      super();
+      this.add(mesh.clone());
+      // this.cop
 
-      super(geometry, material)
+      let box = new Box3().setFromObject(this)
 
+      let scale = (20 / box.getSize().x)
+      this.scale.set(scale, scale, scale)
       this.position.copy(position)
-      this.rotateX(-Math.PI / 2)
+      // this.rotateX(-Math.PI / 2)
       this.board = board;
    }
 }

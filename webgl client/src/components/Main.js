@@ -6,16 +6,16 @@ import {
    Vector3
 } from 'three';
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-
 import { Renderer } from './modules/main_webgl_modules/Renderer';
 import Camera from './modules/main_webgl_modules/Camera';
 import { Keyboard } from './modules/main_webgl_modules/Keyboard_Manager';
 import { my_WS, WS_Class } from './modules/WebSocket';
 import LoadCards from './modules/utils/LoadCards';
 import Game_Board from './modules/map_elements/Game_Board';
+import Smaller_Board from './modules/map_elements/Smaller_Board';
 import Card from './modules/map_elements/Card';
-import { BOARD_SIZE } from './modules/settings/board_info';
+import { BOARD_SIZE, BOARD_POSITION, FIELD } from './modules/settings/board_info';
+import Map from './modules/map_elements/Map';
 import CardMoveManager from './modules/after_game/CardMoveManager';
 import AddIntoRooms from './modules/initial/AddIntoRooms';
 import Interface from './modules/initial/Interface';
@@ -97,7 +97,6 @@ export default class Main {
       // Get Card resources
       // ----------------------
 
-      /**@type {import("./modules/utils/LoadCards").cardObject} */
       this.cards_resources = await LoadCards();
 
       console.log(this.cards_resources)
@@ -108,12 +107,10 @@ export default class Main {
 
       await this.createMap();
       await this.roomsAdd();
-      this.whileGame();
    }
    async roomsAdd() {
 
-      this.interface = new Interface();
-      this.interface.insertNicks(this.allNicks)
+      this.interface = new Interface(this.camera, this.container);
 
       my_WS.mySend("joinRoom", { name: this.nick })
 
@@ -154,9 +151,12 @@ export default class Main {
          messageFunc1 = (ev) => {
             /**@type {{type:String, data:String}} */
             let parsedData = JSON.parse(ev.data);
-
             if (parsedData.type == "GameStarted") {
                console.log(parsedData.data)
+               this.allNicks = parsedData.data.playerList;
+               this.drawnCards = parsedData.data.drawnCard;
+               this.interface.insertNicks(this.allNicks)
+               this.appendCards()
                res();
             }
          }
@@ -164,66 +164,86 @@ export default class Main {
          my_WS.addEventListener("message", messageFunc1)
       })
 
+
       my_WS.removeEventListener("message", messageFunc1)
       my_WS.addEventListener("message", (e) => {
-         console.log(JSON.parse(e.data))
+         console.log(JSON.parse(e.data));
       })
-
-
-      // my_WS.mySend("playerTurn", {
-      //    boardCards: [
-      //       { ID: 1, name: "1", color: "red", x: 1, y: 1 },
-      //       { ID: 1, name: "joker", color: "black", x: 1, y: 1 },
-      //    ],
-
-      //    inHandCards: [
-      //       { ID: 1, name: "1", color: "red", },
-      //       { ID: 1, name: "joker", color: "black", },
-      //    ]
-      // });
-
    }
 
    whileGame() {
-
-      this.card_move_manager = new CardMoveManager(this.camera, this.game_board, this.cards, this.renderer);
+      console.log("whilegame")
+      this.card_move_manager = new CardMoveManager(this.camera, this.meshees, this.cards, this.renderer);
    }
 
+   appendCards() {
+      console.log("ee")
+      let count = 1
+      this.drawnCards.forEach(element => {
+         let strCard = ""
+         if (element.name == "Joker") {
+            strCard = element.color + "_joker";
+         } else {
+            strCard = element.color + "_" + element.name;
+         }
+         let card = new Card(
+            this.cards_resources[strCard].mesh,
+            new Vector3(this.boardMap.map[13][count].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMap.map[13][count].zPos),
+            this.meshees
+         );
+         this.cards.push(card);
+         this.scene.add(card)
+         count++;
+      });
+      this.whileGame();
+   }
 
    async createMap() {
       console.log("siemka")
+      this.meshees = []
       this.game_board = new Game_Board();
       this.scene.add(this.game_board)
+      this.meshees.push(this.game_board)
 
+      for (let i = 0; i < 4; i++) {
+         this.smaller_board = new Smaller_Board(i);
+         this.scene.add(this.smaller_board);
+         if (i == 0) {
+            this.meshees.push(this.smaller_board);
+         }
+      }
 
       // ------------
       // light
       // ------------
       this.light = new DirectionalLight(0xffffee, 10);
       this.light.intensity = 0.7;
-      this.light.position.set(0, 1200, -400);
+      this.light.position.set(0, 1200, 0);
       this.scene.add(this.light)
 
 
       // ----------------------
       // append Cards
       // ----------------------
-      let card = new Card(
-         this.cards_resources["Card1"].geometry,
-         new Vector3(100, (BOARD_SIZE.height / 2), 100),
-         this.game_board
-      );
-      this.cards.push(card);
-      this.scene.add(card)
+      this.boardMap = new Map();
+      console.log(this.boardMap.map)
 
-      {
-         let card = new Card(
-            this.cards_resources["Card1"].geometry,
-            new Vector3(0, (BOARD_SIZE.height / 2), 0),
-            this.game_board
-         );
-         this.cards.push(card);
-         this.scene.add(card)
-      }
+      // let card = new Card(
+      //    this.cards_resources["black_1"].mesh,
+      //    new Vector3(-200 + FIELD.x, BOARD_POSITION.y + (BOARD_SIZE.height / 2), -200 + FIELD.z + FIELD.depth),
+      //    this.meshees
+      // );
+      // this.cards.push(card);
+      // this.scene.add(card)
+
+      // {
+      //    let card = new Card(
+      //       this.cards_resources["red_joker"].mesh,
+      //       new Vector3(0, BOARD_POSITION.y + (BOARD_SIZE.height / 2), 0),
+      //       this.meshees
+      //    );
+      //    this.cards.push(card);
+      //    this.scene.add(card)
+      // }
    }
 }

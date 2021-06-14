@@ -11,7 +11,7 @@ export default class Camera extends PerspectiveCamera {
 
       super(75, width / height, 0.1, 10000);
 
-      this.position.set(0, 300, 150)
+      this.position.set(0, 600, 200)
       this.lookAt(new Vector3(0, 0, 0))
       // this.rotation.y = 50 * (Math.PI / 180)
 
