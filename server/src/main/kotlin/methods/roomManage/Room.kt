@@ -13,6 +13,7 @@ import main.kotlin.methods.roomManage.cardManage.colorTypes
 import main.kotlin.methods.roomManage.playerManage.Player
 import main.kotlin.methods.roomManage.roomData.cardArrangement
 import main.kotlin.methods.roomManage.roomGson.PlayerMessage
+import main.kotlin.methods.sqlQuery
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.floor
 
@@ -21,6 +22,8 @@ class Room() {
     var roomStatus: RoomStatus = RoomStatus.BeforeGame
     val allCards = mutableListOf<Card>()
     val availableCards = mutableListOf<Card>()
+//    val JSON = sqlQuery.select("SELECT * FROM Constants WHERE key='cards'")[0]["cards"]!!
+//    val availableCards = Gson().fromJson(JSON, MutableList::class.java) as MutableList<Card>
 
     var whoseTurn = 0;
     val board = Board();
@@ -44,6 +47,9 @@ class Room() {
                 id++
             }
         }
+
+        println(Gson().toJson(availableCards));
+
         allCards.addAll(availableCards);
 
         availableCards.forEach {
@@ -168,7 +174,7 @@ class Room() {
         // ------------------
         if (winnerPlayer == null) {
             println("Not winner");
-            playerList.forEach {
+            playerList.forEachIndexed() { ind, it ->
                 if (it != null) {
 
                     val send = MessageData(
@@ -186,6 +192,7 @@ class Room() {
                                     null
                                 }
                             },
+                            "YourIndex" to ind,
                             Pair("turn", playerList[whoseTurn]!!.session == it.session)
                         ),
                     )

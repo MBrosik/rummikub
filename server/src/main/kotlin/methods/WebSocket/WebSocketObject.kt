@@ -94,8 +94,8 @@ object WebSocketObject {
 
             if (parsedMessage.type != "not idle") {
                 println("onMessage")
-//                println("parsedMessage")
-//                println(parsedMessage)
+                println("parsedMessage")
+                println(parsedMessage)
 //                println(parsedMessage::class.java)
 //                println(parsedMessage.data::class.java)
             }
