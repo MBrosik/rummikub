@@ -1,6 +1,6 @@
 import { Renderer } from "../main_webgl_modules/Renderer";
 import Card from "../map_elements/Card";
-import { BOARD_SIZE, FIELDS_COUNT, BOARD_POSITION, SMALLER_SIZE_X } from "../settings/board_info";
+import { BOARD_SIZE, FIELDS_COUNT, BOARD_POSITION, SMALLER_SIZE_X, FIELD } from "../settings/board_info";
 import CameraColider from "../utils/CameraColider";
 
 
@@ -11,12 +11,24 @@ export default class CardMoveManager {
     * @param {import("../map_elements/Game_Board").default} game_board 
     * @param {Renderer} renderer
     */
-   constructor(camera, meshees, cards, renderer) {
+   constructor(camera, meshees, cards, renderer, boardMap, turn) {
       this.camera = camera
       this.meshees = meshees;
       this.game_board = meshees[0];
       this.cards = cards;
       this.renderer = renderer;
+      this.boardMap = boardMap;
+      this.turn = turn;
+
+      this.startCardX = null;
+      this.startCardZ = null;
+      this.lastNowX = null;
+      this.lastNowZ = null;
+      this.lastX = null;
+      this.lastZ = null;
+      this.newCard = null;
+      this.first = { x: null, z: null, card: null, color: null, time: false };
+      this.cardsRow = [];
 
       /**@type {Card} */
       this.selected_card = undefined;
@@ -37,7 +49,7 @@ export default class CardMoveManager {
       // })
 
       // this.cardsCameraColider = new CameraColider(this.camera, ...card_arr)
-      console.log(this.game_board)
+      // console.log(this.game_board)
       this.gameBoardCameraColider = new CameraColider(this.camera, this.meshees)
 
 
@@ -48,18 +60,26 @@ export default class CardMoveManager {
       this.mousemove_ev_bind = this.mousemove_ev.bind(this)
       this.mouseup_ev_bind = this.mouseup_ev.bind(this)
 
+
+   }
+
+   listenersAdd() {
       window.addEventListener("mousedown", this.mousedown_ev_bind)
       window.addEventListener("mousemove", this.mousemove_ev_bind)
       window.addEventListener("mouseup", this.mouseup_ev_bind)
    }
-
-
+   listenersRemove() {
+      window.removeEventListener("mousedown", this.mousedown_ev_bind)
+      window.removeEventListener("mousemove", this.mousemove_ev_bind)
+      window.removeEventListener("mouseup", this.mouseup_ev_bind)
+   }
 
    /**
     * @description Funkcja wykonująca się na naciśnięcie myszy
     * @param {MouseEvent} e 
     */
    mousedown_ev(e) {
+      // console.log(this.turn)
       if (this.selected_card != undefined) return
       e.preventDefault();
       // if (this.selected_card != undefined || e.target != this.renderer.domElement) return
@@ -70,6 +90,12 @@ export default class CardMoveManager {
        */
       // console.log(this.cardsCameraColider.getIntersects(e));
       this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object.parent.parent;
+      if (this.selected_card != undefined) {
+         this.startCardX = Math.floor((this.selected_card.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
+         this.startCardZ = Math.floor((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
+         this.startCardXpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.x;
+         this.startCardZpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.z;
+      }
       // this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object;
       // console.log(this.selected_card)
 
@@ -139,6 +165,74 @@ export default class CardMoveManager {
       let x_floor = Math.max(0, Math.floor((pointX / BOARD_SIZE.width) * FIELDS_COUNT.x - 0.01) * field.width);
       let y_floor = Math.max(0, Math.floor((pointZ / (BOARD_SIZE.depth + SMALLER_SIZE_X.depth)) * FIELDS_COUNT.z - 0.01) * field.depth);
 
+      let nowX = Math.floor(x_floor / FIELD.width);
+      let nowZ = Math.floor(y_floor / FIELD.depth);
+      this.nnx = null;
+      this.nnz = null;
+
+
+      // if (this.startCardZ < 12) {
+      if (this.boardMap.map[nowZ][nowX].card != "" && (nowX != this.startCardX || nowZ != this.startCardZ) && this.lastX != this.boardMap.map[nowZ][nowX].card.position.x && this.lastZ != this.boardMap.map[nowZ][nowX].card.position.z) {
+         // if (this.lastNowX == null || this.lastNowZ == null) {
+         this.lastNowX = nowX;
+         this.lastNowZ = nowZ;
+
+         // }
+         this.lastX = this.boardMap.map[nowZ][nowX].card.position.x;
+         this.lastZ = this.boardMap.map[nowZ][nowX].card.position.z;
+
+         // this.boardMap.map[nowZ][nowX].card.position.x = this.startCardXpos;
+         // this.boardMap.map[nowZ][nowX].card.position.z = this.startCardZpos;
+         this.boardMap.map[nowZ][nowX].card.position.x = this.lastPosX;
+         this.boardMap.map[nowZ][nowX].card.position.z = this.lastPosZ;
+         this.newCard = this.boardMap.map[nowZ][nowX].card;
+         if (this.first.time == false) {
+            this.first.x = Math.floor((this.lastPosX - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
+            this.first.z = Math.floor((this.lastPosZ - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
+            this.first.card = this.newCard;
+            this.first.color = this.boardMap.map[nowZ][nowX].color;
+            this.first.time = true;
+         }
+      }
+      this.lastPosX = this.selected_card.position.x;
+      this.lastPosZ = this.selected_card.position.z;
+      if (this.lastX != null && this.lastZ != null && (this.lastNowX != nowX || this.lastNowZ != nowZ)) {
+         console.log("out")
+         if (this.boardMap.map[nowZ][nowX].card != "" && this.boardMap.map[nowZ][nowX].card != this.boardMap.map[this.startCardZ][this.startCardX].card) {
+            // this.cardsRow[this.cardsRow.length - 1].card.position.x = this.cardsRow[this.cardsRow.length - 1].x;
+            // this.cardsRow[this.cardsRow.length - 1].card.position.y = this.cardsRow[this.cardsRow.length - 1].z;
+         } else {
+            // this.newCard.position.x = this.set.xPos;
+            // this.newCard.position.z = this.set.zPos;
+            this.boardMap.map.forEach(el => {
+               el.forEach(element => {
+                  if (element.card != "") {
+                     element.card.position.x = element.xPos;
+                     element.card.position.z = element.zPos;
+                  }
+               });
+            });
+         }
+
+
+         // this.boardMap.map.forEach(el => {
+         //    el.forEach(element => {
+         //       if (element.card != "") {
+         //          element.card.position.x = element.xPos;
+         //          element.card.position.z = element.zPos;
+         //       }
+         //    });
+         // });
+         this.lastX = null;
+         this.lastZ = null;
+         this.lastNowX = null;
+         this.lastNowZ = null;
+         this.newCard = null;
+
+      }
+      // }
+
+
       this.selected_card.position.x = startX + x_floor + field.x
       this.selected_card.position.z = startZ + y_floor + field.z
    }
@@ -152,11 +246,29 @@ export default class CardMoveManager {
    mouseup_ev(e) {
       if (this.selected_card == undefined) return
 
-
       /**
        * Na podniesienie klawisza odznaczam zaznaczony obiekt
        */
+
+      if (this.newCard != null) {
+         // console.log(this.newCard, this.selected_card);
+         // console.log(this.boardMap.map[this.startCardZ][this.startCardX].card)
+         // this.boardMap.map[this.startCardZ][this.startCardX].card = this.newCard;
+         this.boardMap.map[this.first.z][this.first.x].card = this.first.card;
+         this.boardMap.map[this.first.z][this.first.x].color = this.first.color;
+         this.first.time = false;
+      } else {
+         // this.boardMap.map[this.startCardZ][this.startCardX].card = "";
+         // this.boardMap.map[this.startCardZ][this.startCardX].color = "";
+      }
+      let x = Math.floor((this.selected_card.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
+      let z = Math.floor((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
+      this.boardMap.map[z][x].card = this.selected_card;
+      this.boardMap.map[z][x].color = this.boardMap.map[this.startCardZ][this.startCardX].color;
+      this.boardMap.map[this.startCardZ][this.startCardX].card = "";
+      this.boardMap.map[this.startCardZ][this.startCardX].color = "";
       this.selected_card = undefined
+      console.log(this.boardMap.map)
       document.body.style.cursor = "grab"
    }
 }

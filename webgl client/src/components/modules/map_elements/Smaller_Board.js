@@ -1,4 +1,5 @@
 import {
+    Box3,
     BoxGeometry,
     Mesh,
     MeshPhongMaterial,
@@ -37,5 +38,7 @@ export default class Game_Board extends Mesh {
         // wireframe.material.color.set(0x005f9e)
 
         this.add(wireframe);
+        let box = new Box3().setFromObject(this);
+        console.log(box.getSize())
     }
 }

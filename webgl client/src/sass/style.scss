@@ -189,3 +189,15 @@ h1 {
    width: 120px;
    height: 40px;
 }
+
+#divForButton {
+   display: flex;
+   justify-content: flex-end;
+   align-items: center;
+   position: absolute;
+   border: 1px solid white;
+   right: 0;
+   top: calc(50% - 200px);
+   height: 100px;
+   width: 150px;
+}

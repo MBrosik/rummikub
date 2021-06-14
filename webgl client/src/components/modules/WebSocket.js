@@ -22,6 +22,17 @@ export class WS_Class extends WebSocket {
       // this.onmessage = this.onmessage_ev.bind(this)
       this.onerror = this.onerror_ev.bind(this)
       this.onclose = this.onclose_ev.bind(this)
+      this.addEventListener("message", (e) => {
+         console.log("-----------------");
+         console.log("Testowy");
+         console.log("-----------------");
+
+         console.log(JSON.parse(e.data));
+
+         console.log("-----------------");
+         console.log("koniec");
+         console.log("-----------------");
+      })
    }
 
 

@@ -14,7 +14,7 @@ import LoadCards from './modules/utils/LoadCards';
 import Game_Board from './modules/map_elements/Game_Board';
 import Smaller_Board from './modules/map_elements/Smaller_Board';
 import Card from './modules/map_elements/Card';
-import { BOARD_SIZE, BOARD_POSITION, FIELD } from './modules/settings/board_info';
+import { BOARD_SIZE, BOARD_POSITION, FIELD, FIELDS_COUNT } from './modules/settings/board_info';
 import Map from './modules/map_elements/Map';
 import CardMoveManager from './modules/after_game/CardMoveManager';
 import AddIntoRooms from './modules/initial/AddIntoRooms';
@@ -41,6 +41,7 @@ export default class Main {
       this.renderer = new Renderer(this.scene, container);
       this.camera = new Camera(this.renderer);
       this.keyboard = new Keyboard();
+      this.turn = false;
 
       this.renderer.render_update(this.scene, this.camera);
 
@@ -110,7 +111,7 @@ export default class Main {
    }
    async roomsAdd() {
 
-      this.interface = new Interface(this.camera, this.container);
+      this.interface = new Interface(this.camera, this.container, this.sendThruButton.bind(this));
 
       my_WS.mySend("joinRoom", { name: this.nick })
 
@@ -167,13 +168,56 @@ export default class Main {
 
       my_WS.removeEventListener("message", messageFunc1)
       my_WS.addEventListener("message", (e) => {
-         console.log(JSON.parse(e.data));
+         // console.log(JSON.parse(e.data));
+         this.whileGame(JSON.parse(e.data));
       })
    }
 
-   whileGame() {
+   whileGame(dataPlayers) {
+      this.dataPlayers = dataPlayers;
+      console.log(this.dataPlayers)
+      if (this.dataPlayers.data.turn == true) {
+         this.turn = true;
+         this.card_move_manager.listenersAdd();
+      } else {
+         if (this.turn == true) {
+            console.log("done")
+
+            // console.log(this.boardMapGet);
+         }
+         this.turn = false;
+         this.card_move_manager.listenersRemove();
+      }
+
       console.log("whilegame")
-      this.card_move_manager = new CardMoveManager(this.camera, this.meshees, this.cards, this.renderer);
+   }
+   sendThruButton() {
+      this.objectToSend = {
+         boardCards: [],
+         inHandCards: []
+      }
+      this.boardMapGet = this.card_move_manager.boardMap.map;
+      this.boardMapGet.forEach(element => {
+         element.forEach(el => {
+            let splitter = el.color.split("_")
+            if (el.z > FIELDS_COUNT.z - 3) {
+               if (splitter[1] != undefined) {
+                  this.objectToSend.inHandCards.push({ name: splitter[1], color: splitter[0], x: el.x, y: el.z })
+               }
+            } else {
+               if (splitter[1] != undefined) {
+                  this.objectToSend.boardCards.push({ name: splitter[1], color: splitter[0], x: el.x, y: el.z })
+               }
+            }
+         });
+      });
+      console.log(this.objectToSend)
+      my_WS.mySend("playerTurn", this.objectToSend);
+   }
+   listeners() {
+      window.addEventListener("mousedown", this.mousedown_ev_bind)
+      window.addEventListener("mousemove", this.mousemove_ev_bind)
+      window.addEventListener("mouseup", this.mouseup_ev_bind)
    }
 
    appendCards() {
@@ -192,10 +236,13 @@ export default class Main {
             this.meshees
          );
          this.cards.push(card);
-         this.scene.add(card)
+         this.scene.add(card);
+         this.boardMap.map[13][count].card = card;
+         this.boardMap.map[13][count].color = strCard;
          count++;
       });
-      this.whileGame();
+      this.card_move_manager = new CardMoveManager(this.camera, this.meshees, this.cards, this.renderer, this.boardMap, this.turn);
+      // this.whileGame();
    }
 
    async createMap() {
@@ -226,7 +273,7 @@ export default class Main {
       // append Cards
       // ----------------------
       this.boardMap = new Map();
-      console.log(this.boardMap.map)
+      // console.log(this.boardMap.map)
 
       // let card = new Card(
       //    this.cards_resources["black_1"].mesh,
