@@ -203,8 +203,7 @@ class Room() {
 
                     try {
                         it.session.remote.sendString(Gson().toJson(send));
-                    }
-                    catch (e: Throwable){
+                    } catch (e: Throwable) {
                         println("Błąd z endpointem")
                         println(e)
                     }
@@ -318,7 +317,15 @@ class Room() {
     }
 
     fun playerFinishedTurn(userData: SessionStructure, sendData: Any) {
-        val playerObject = playerList.find { it!!.session == userData.session }!!
+
+        val playerObject = playerList.find {
+            if (it != null) {
+                it.session == userData.session
+            } else {
+                false
+            }
+        }!!
+
         println(sendData);
         println(Gson().toJson(sendData))
 
@@ -336,29 +343,31 @@ class Room() {
 
         // -------------------
         // if added to hand
+        // tablica kart których nie ma na serwerze
         // -------------------
 
         val changeInHandTableA = parsedSendData.inHandCards.filter {
             playerObject.CardsInHand.find { it1 ->
-                it1.name == it.name && it1.color == it.color
+                it1.name == it.name && it1.color == it.color && it1.ID == it.ID
             } == null
         }
 
         // -----------------------
         // if removed from hand
+        // tablica kart których nie ma na w ręce
         // -----------------------
 
         val changeInHandTableB = playerObject.CardsInHand.filter {
             parsedSendData.inHandCards.find { it1 ->
-                it1.name == it.name && it1.color == it.color
+                it1.name == it.name && it1.color == it.color && it1.ID == it.ID
             } == null
         }
 
         var points: Int = 0;
         if (
             parsedSendData.boardCards.find { it.x == null || it.y == null } == null
-//            && changeInHandTableA.isEmpty()
-//            && changeInHandTableB.isNotEmpty()
+            && changeInHandTableA.isEmpty()
+            && changeInHandTableB.isNotEmpty()
             && parsedSendData.boardCards.isNotEmpty()
         ) {
 
@@ -381,6 +390,7 @@ class Room() {
             // check for cards
             // ----------------
             val searchTable = mutableListOf<Card>();
+            var cardPoints = 0;
 
             var everythingOK = true;
 
@@ -536,10 +546,25 @@ class Room() {
                                         }
                                     }
 
-                                    if (type == cardArrangement.byNumbers) {
+                                    // ------------------
+                                    // check 30 points
+                                    // ------------------
+                                    val filterArr1 =
+                                        searchTable.filter { changeInHandTableB.find { it1 -> it1.ID == it.ID } != null }
 
-                                    } else if (type == cardArrangement.byColors) {
-//                                        searchTable.
+                                    if (filterArr1.size == searchTable.size) {
+                                        val preFirstCard = searchTable[preFirstIndex];
+                                        cardPoints = 0;
+                                        if (type == cardArrangement.byNumbers) {
+                                            val zeroValue = preFirstCard.name.toInt() - preFirstIndex;
+
+                                            for (x in (0 until searchTable.size)) {
+                                                cardPoints += zeroValue + x;
+                                            }
+
+                                        } else if (type == cardArrangement.byColors) {
+                                            cardPoints = preFirstCard.name.toInt() * searchTable.size;
+                                        }
                                     }
 
 
@@ -555,28 +580,21 @@ class Room() {
 
                 if (!everythingOK) break;
             }
-            if (everythingOK) {
+            if (
+                everythingOK
+                && (cardPoints>=30 || playerObject.firstMove)
+            ) {
                 board.cards = parsedSendData.boardCards
                 playerObject.CardsInHand = parsedSendData.inHandCards
-
+                playerObject.firstMove = true;
             } else if (availableCards.size != 0) {
-//                val id = floor(Math.random() * availableCards.size).toInt()
-//                playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
-//                availableCards.removeAt(id)
                 drawCard()
             }
+            cardPoints = 0;
 
         }
-        //else if(
-        //changeInHandTableA.isNotEmpty()
-        //|| changeInHandTableB.isEmpty()
-        //){
         else if (availableCards.size != 0) {
-            // if the player took a card from the board or has not added anything to the board
-//            val id = floor(Math.random() * availableCards.size).toInt()
-//            playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
-//            availableCards.removeAt(id)
-            drawCard()
+            drawCard() // if the player took a card from the board or has not added anything to the board
         }
         board.curentCards.clear();
 
