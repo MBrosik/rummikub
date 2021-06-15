@@ -90,7 +90,7 @@ export default class Main {
       this.nick = nick;
       this.divToClose = document.getElementById("startDiv");
       this.divToClose.style.display = "none";
-      this.allNicks = [{ nick: this.nick }, { nick: "user2" }, { nick: "user3" }, { nick: "user4" }]
+      this.allNicks = [{ name: null }, { name: null }, { name: null }, { name: null }]
       this.init();
    }
    async init() {
@@ -129,15 +129,26 @@ export default class Main {
             /**@type {{type:String, data:String}} */
             let parsedData = JSON.parse(ev.data);
 
-            if (parsedData.type == "onAddedToRoom") {
+            // if (parsedData.type == "onAddedToRoom") {
+            //    this.interface.insertNicks(this.allNicks)
+            //    console.log(parsedData.data)
+
+            // }
+            if (parsedData.type == "players_list") {
                console.log(parsedData.data)
+               this.allNicks = parsedData.data.playerList;
+               console.log(this.allNicks)
+               this.interface.insertNicks(this.allNicks);
+               if (this.allNicks.every(el => el != null)) {
+                  my_WS.removeEventListener("message", messageFunc)
+               }
                res();
             }
          }
 
          my_WS.addEventListener("message", messageFunc)
       }).then(() => {
-         my_WS.removeEventListener("message", messageFunc)
+
       })
 
 
@@ -155,9 +166,8 @@ export default class Main {
             let parsedData = JSON.parse(ev.data);
             if (parsedData.type == "GameStarted") {
                console.log(parsedData.data)
-               this.allNicks = parsedData.data.playerList;
+               // this.allNicks = parsedData.data.playerList;
                this.drawnCards = parsedData.data.drawnCard;
-               this.interface.insertNicks(this.allNicks)
                this.appendCards()
                res();
             }
@@ -213,6 +223,7 @@ export default class Main {
             this.scene.add(card);
             this.boardMap.map[element.y][element.x].card = card;
             this.boardMap.map[element.y][element.x].color = strCard;
+            this.boardMap.map[element.y][element.x].ID = element.ID;
          }
       });
 
@@ -226,14 +237,15 @@ export default class Main {
          if (element.x != undefined && element.y != undefined) {
             let card = new Card(
                this.cards_resources[strCard].mesh,
-               new Vector3(this.boardMapGet[FIELDS_COUNT.z - 3][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMapGet[FIELDS_COUNT.z - 3][element.x].zPos),
+               new Vector3(this.boardMapGet[element.y][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMapGet[element.y][element.x].zPos),
                this.meshees
             );
             this.cards.push(card);
             this.allCards.push(card);
             this.scene.add(card);
-            this.boardMap.map[FIELDS_COUNT.z - 3][element.x].card = card;
-            this.boardMap.map[FIELDS_COUNT.z - 3][element.x].color = strCard;
+            this.boardMap.map[element.y][element.x].card = card;
+            this.boardMap.map[element.y][element.x].color = strCard;
+            this.boardMap.map[element.y][element.x].ID = element.ID;
          }
 
       });
@@ -268,11 +280,11 @@ export default class Main {
             let splitter = el.color.split("_")
             if (el.z >= FIELDS_COUNT.z - 3) {
                if (splitter[1] != undefined) {
-                  this.objectToSend.inHandCards.push({ name: splitter[1], color: splitter[0], x: el.x, y: el.z })
+                  this.objectToSend.inHandCards.push({ ID: el.ID, name: splitter[1], color: splitter[0], x: el.x, y: el.z })
                }
             } else {
                if (splitter[1] != undefined) {
-                  this.objectToSend.boardCards.push({ name: splitter[1], color: splitter[0], x: el.x, y: el.z })
+                  this.objectToSend.boardCards.push({ ID: el.ID, name: splitter[1], color: splitter[0], x: el.x, y: el.z })
                }
             }
          });

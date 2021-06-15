@@ -61,11 +61,14 @@ export default class addIntoRooms {
     insertNicks(allNicks) {
         this.allNicks = allNicks;
         this.allNicks.forEach(element => {
-            this.newText = document.createElement('p');
-            this.newText.className = "newText";
-            this.newText.innerText = element.name;
-            let id = this.allNicks.indexOf(element);
-            this.divs[id].appendChild(this.newText);
+            if (element != null) {
+                let id = this.allNicks.indexOf(element);
+                this.divs[id].innerHTML = "";
+                this.newText = document.createElement('p');
+                this.newText.className = "newText";
+                this.newText.innerText = element.name;
+                this.divs[id].appendChild(this.newText);
+            }
         });
     }
     toggle() {
