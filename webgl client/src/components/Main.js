@@ -42,6 +42,7 @@ export default class Main {
       this.camera = new Camera(this.renderer);
       this.keyboard = new Keyboard();
       this.turn = false;
+      this.allCards = [];
 
       this.renderer.render_update(this.scene, this.camera);
 
@@ -176,6 +177,67 @@ export default class Main {
    whileGame(dataPlayers) {
       this.dataPlayers = dataPlayers;
       console.log(this.dataPlayers)
+
+      this.allCards.forEach(element => {
+         this.scene.remove(element);
+      });
+
+      this.allCards = []
+      this.cards.splice(0)
+
+      this.boardMapGet = this.card_move_manager.boardMap.map;
+
+      this.boardMapGet.forEach(el => {
+         el.forEach(element => {
+            if (element.card != "") {
+               element.card = "";
+            }
+         });
+      });
+
+      this.dataPlayers.data.boardCards.forEach(element => {
+         let strCard = ""
+         if (element.name == "Joker") {
+            strCard = element.color + "_joker";
+         } else {
+            strCard = element.color + "_" + element.name;
+         }
+         if (element.x != undefined && element.y != undefined) {
+            let card = new Card(
+               this.cards_resources[strCard].mesh,
+               new Vector3(this.boardMapGet[element.y][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMapGet[element.y][element.x].zPos),
+               this.meshees
+            );
+            this.cards.push(card);
+            this.allCards.push(card);
+            this.scene.add(card);
+            this.boardMap.map[element.y][element.x].card = card;
+            this.boardMap.map[element.y][element.x].color = strCard;
+         }
+      });
+
+      this.dataPlayers.data.inHandCards.forEach(element => {
+         let strCard = ""
+         if (element.name == "Joker") {
+            strCard = element.color + "_joker";
+         } else {
+            strCard = element.color + "_" + element.name;
+         }
+         if (element.x != undefined && element.y != undefined) {
+            let card = new Card(
+               this.cards_resources[strCard].mesh,
+               new Vector3(this.boardMapGet[FIELDS_COUNT.z - 3][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMapGet[FIELDS_COUNT.z - 3][element.x].zPos),
+               this.meshees
+            );
+            this.cards.push(card);
+            this.allCards.push(card);
+            this.scene.add(card);
+            this.boardMap.map[FIELDS_COUNT.z - 3][element.x].card = card;
+            this.boardMap.map[FIELDS_COUNT.z - 3][element.x].color = strCard;
+         }
+
+      });
+
       if (this.dataPlayers.data.turn == true) {
          this.turn = true;
          this.card_move_manager.listenersAdd();
@@ -189,6 +251,10 @@ export default class Main {
          this.card_move_manager.listenersRemove();
       }
 
+      this.card_move_manager.boardMap.map = this.boardMapGet;
+      this.card_move_manager.cards = this.cards;
+      this.card_move_manager.cardsCameraColider.cards = this.cards;
+
       console.log("whilegame")
    }
    sendThruButton() {
@@ -200,7 +266,7 @@ export default class Main {
       this.boardMapGet.forEach(element => {
          element.forEach(el => {
             let splitter = el.color.split("_")
-            if (el.z > FIELDS_COUNT.z - 3) {
+            if (el.z >= FIELDS_COUNT.z - 3) {
                if (splitter[1] != undefined) {
                   this.objectToSend.inHandCards.push({ name: splitter[1], color: splitter[0], x: el.x, y: el.z })
                }
@@ -220,27 +286,35 @@ export default class Main {
       window.addEventListener("mouseup", this.mouseup_ev_bind)
    }
 
+   refreshHand(drawnCardsNow) {
+      // this.drawnCardsNow = drawnCardsNow
+      // let count = 0
+      // console.log(this.drawnCardsNow.length % 13)
+      // this.drawnCardsNow.forEach(element => {
+      //    let strCard = ""
+      //    if (element.name == "Joker") {
+      //       strCard = element.color + "_joker";
+      //    } else {
+      //       strCard = element.color + "_" + element.name;
+      //    }
+      //    let card = new Card(
+      //       this.cards_resources[strCard].mesh,
+      //       new Vector3(this.boardMap.map[FIELDS_COUNT.z - 3][count].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMap.map[FIELDS_COUNT.z - 3][count].zPos),
+      //       this.meshees
+      //    );
+      //    this.cards.push(card);
+      //    this.allCards.push(card);
+      //    this.scene.add(card);
+      //    this.boardMap.map[FIELDS_COUNT.z - 3][count].card = card;
+      //    this.boardMap.map[FIELDS_COUNT.z - 3][count].color = strCard;
+      //    count++;
+      // });
+   }
+
    appendCards() {
+
       console.log("ee")
-      let count = 1
-      this.drawnCards.forEach(element => {
-         let strCard = ""
-         if (element.name == "Joker") {
-            strCard = element.color + "_joker";
-         } else {
-            strCard = element.color + "_" + element.name;
-         }
-         let card = new Card(
-            this.cards_resources[strCard].mesh,
-            new Vector3(this.boardMap.map[13][count].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMap.map[13][count].zPos),
-            this.meshees
-         );
-         this.cards.push(card);
-         this.scene.add(card);
-         this.boardMap.map[13][count].card = card;
-         this.boardMap.map[13][count].color = strCard;
-         count++;
-      });
+      this.refreshHand(this.drawnCards);
       this.card_move_manager = new CardMoveManager(this.camera, this.meshees, this.cards, this.renderer, this.boardMap, this.turn);
       // this.whileGame();
    }
