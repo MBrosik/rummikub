@@ -43,6 +43,7 @@ export default class Main {
       this.keyboard = new Keyboard();
       this.turn = false;
       this.allCards = [];
+      this.readyDivs = [];
 
       this.renderer.render_update(this.scene, this.camera);
 
@@ -250,13 +251,23 @@ export default class Main {
 
       });
 
+      //tura
+      this.interface.divs.forEach(element => {
+         element.style.backgroundColor = "rgba(2, 72, 224, 0.5)";
+      });
+      this.interface.divs[this.dataPlayers.data.whoseTurn].style.backgroundColor = "rgba(2, 224, 2, 0.5)";
+
+      this.interface.divs[this.dataPlayers.data.YourIndex].style.border = "3px solid rgb(185, 43, 251)";
+      // this.interface.addTimer(this.dataPlayers.data.whoseTurn);
+
       if (this.dataPlayers.data.turn == true) {
+         this.interface.addButton();
          this.turn = true;
          this.card_move_manager.listenersAdd();
       } else {
          if (this.turn == true) {
             console.log("done")
-
+            this.interface.removeButton();
             // console.log(this.boardMapGet);
          }
          this.turn = false;

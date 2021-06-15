@@ -19,6 +19,7 @@ body {
    background-color: cadetblue;
    margin: 0;
    padding: 0;
+   overflow: hidden;
    // font-family: ;
 }
 
@@ -81,6 +82,11 @@ h1 {
    height: 150px;
    display: flex;
    justify-content: space-evenly;
+
+   .forNicksNow {
+      width: 300px;
+      height: 150px;
+   }
 
    .nickDiv {
       background-color: rgba(2, 72, 224, 0.5);
@@ -195,9 +201,37 @@ h1 {
    justify-content: flex-end;
    align-items: center;
    position: absolute;
-   border: 1px solid white;
    right: 0;
-   top: calc(50% - 200px);
+   top: calc(50% - 100px);
    height: 100px;
    width: 150px;
+}
+
+#buttonSend {
+   color: white !important;
+   font-size: 20px;
+	text-transform: uppercase;
+	background: rgba(2, 72, 224, 0.5);
+	padding: 20px;
+	// border: 3px solid rgb(251, 84, 43) !important;
+   border-left: 3px solid rgb(251, 84, 43) !important;
+   border-top: 3px solid rgb(251, 84, 43) !important;
+   border-bottom: 3px solid rgb(251, 84, 43) !important;
+   width: 150px;
+   height: 60px;
+   right: -150px;
+	border-radius: 20px 0px 0px 20px;
+	@include flex("true");
+	transition: all 0.5s ease-in-out;
+   position: relative;
+}
+
+#buttonSend:hover {
+   color: #494949 !important;
+   border-left: 3px solid rgb(251, 84, 43) !important;
+   border-top: 3px solid rgb(251, 84, 43) !important;
+   border-bottom: 3px solid rgb(251, 84, 43) !important;
+	border-radius: 20px 0px 0px 20px;
+	transition: all 0.3s ease 0s;
+   cursor: pointer;
 }

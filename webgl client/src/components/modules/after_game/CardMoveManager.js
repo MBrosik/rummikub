@@ -111,8 +111,8 @@ export default class CardMoveManager {
       if (this.selected_card != undefined) {
          this.startCardX = Math.floor((this.selected_card.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
          this.startCardZ = Math.floor((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
-         this.startCardXpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.x;
-         this.startCardZpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.z;
+         // this.startCardXpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.x;
+         // this.startCardZpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.z;
       }
       // this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object;
       // console.log(this.selected_card)
