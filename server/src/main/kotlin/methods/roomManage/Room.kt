@@ -13,7 +13,6 @@ import main.kotlin.methods.roomManage.cardManage.colorTypes
 import main.kotlin.methods.roomManage.playerManage.Player
 import main.kotlin.methods.roomManage.roomData.cardArrangement
 import main.kotlin.methods.roomManage.roomGson.PlayerMessage
-import main.kotlin.methods.sqlQuery
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.floor
 
@@ -43,7 +42,7 @@ class Room() {
             }
 
             listOf<colorTypes>(colorTypes.black, colorTypes.red).forEach {
-                availableCards.add(Card( id,"joker", it))
+                availableCards.add(Card(id, "joker", it))
                 id++
             }
         }
@@ -70,19 +69,20 @@ class Room() {
         }
     }
 
-    fun sendUsersList(){
-        val msg = MessageData("players_list", mapOf(
-            "playerList" to playerList.map{
-                if (it != null) {
-                    mapOf(
-                        "name" to it?.nick
-                    )
-                }
-                else{
-                    null;
-                }
-            },
-        ))
+    fun sendUsersList() {
+        val msg = MessageData(
+            "players_list", mapOf(
+                "playerList" to playerList.map {
+                    if (it != null) {
+                        mapOf(
+                            "name" to it?.nick
+                        )
+                    } else {
+                        null;
+                    }
+                },
+            )
+        )
         smallBroadcast(Gson().toJson(msg));
     }
 
@@ -109,13 +109,12 @@ class Room() {
 //            "whoseTurn" to whoseTurn
 //        )
         val sendMap = mutableMapOf<String, Any>(
-            "playerList" to playerList.map{
+            "playerList" to playerList.map {
                 if (it != null) {
                     mapOf(
                         "name" to it?.nick
                     )
-                }
-                else{
+                } else {
                     null;
                 }
             },
@@ -215,19 +214,19 @@ class Room() {
                 println(" Corutyna nie istnieje$e")
             }
 
-            //println("Po Corountine")
+            println("Po Corountine")
             corountine = CoroutineScope(EmptyCoroutineContext);
             corountine.launch {
-                //println("Po launch")
+                println("Po launch")
                 delay(60000)
-                //println("Po delay")
+                println("Po delay")
 
 
 //                if (playerList.filter { it != null }.size != 0) {
 //                if (playerList.filterNotNull().size != 0) {
                 if (playerList.filterNotNull().isNotEmpty()) {
 
-                    //println("Po ifie")
+                    println("Po ifie")
 
                     board.curentCards.clear();
 
@@ -274,10 +273,62 @@ class Room() {
 
     }
 
-    fun drawCard(){
+    fun drawCard() {
         if (availableCards.size != 0) {
+
+            // -----------------
+            // set min max
+            // -----------------
+//            val xTable = parsedSendData.boardCards.map { it.x!!.toDouble() }.sorted();
+//            val yTable = parsedSendData.boardCards.map { it.y!!.toDouble() }.sorted();
+
+//            val xTable = playerList[whoseTurn]!!.CardsInHand.map { it.x!!.toDouble() }.sorted();
+//            val yTable = playerList[whoseTurn]!!.CardsInHand.map { it.y!!.toDouble() }.sorted();
+
+//            val minX = xTable[0].toInt();
+//            val maxX = xTable[xTable.size - 1].toInt();
+//
+//            val minY = yTable[0].toInt();
+//            val maxY = yTable[yTable.size - 1].toInt();
+
+//            var card1 = null;
+
+//            outerloop@ for (i in 0..4) {
+//                for (j in 0..4) {
+//                    if (i * j > 6) {
+//                        println("Breaking")
+//                        break@outerloop
+//                    }
+//                    println("$i $j")
+//                }
+//            }
+//            println("Done")
+
+            var x:Int;
+            var y:Int;
+
+            xloop@for ( x1 in (0..12)) {
+                for (y1 in (0..12)) {
+                    val tempCard = playerList[whoseTurn]!!.CardsInHand.find { it.x == x1 && it.y == y1 }
+
+                    if (tempCard == null) {
+                        x = x1;
+                        y = y1;
+
+                        break@xloop
+                    }
+                }
+            }
+
+
             val id = floor(Math.random() * availableCards.size).toInt()
-            playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
+            val card = availableCards[id]
+
+
+            card.x =
+
+
+            playerList[whoseTurn]!!.CardsInHand.add(card);
             availableCards.removeAt(id)
         }
     }
@@ -298,12 +349,11 @@ class Room() {
         println(parsedSendData.boardCards.find { it.x == null || it.y == null } == null)
 
 
-
         // -------------------
         // if added to hand
         // -------------------
 
-        val changeInHandTableA = parsedSendData.inHandCards.filter{
+        val changeInHandTableA = parsedSendData.inHandCards.filter {
             playerObject.CardsInHand.find { it1 ->
                 it1.name == it.name && it1.color == it.color
             } == null
@@ -313,13 +363,13 @@ class Room() {
         // if removed from hand
         // -----------------------
 
-        val changeInHandTableB = playerObject.CardsInHand.filter{
+        val changeInHandTableB = playerObject.CardsInHand.filter {
             parsedSendData.inHandCards.find { it1 ->
                 it1.name == it.name && it1.color == it.color
             } == null
         }
 
-        var points:Int = 0;
+        var points: Int = 0;
         if (
             parsedSendData.boardCards.find { it.x == null || it.y == null } == null
             && changeInHandTableA.isEmpty()
@@ -327,7 +377,7 @@ class Room() {
             && parsedSendData.boardCards.isNotEmpty()
         ) {
 
-
+            println("after if 345 line")
 
 
             // -----------------
@@ -353,6 +403,9 @@ class Room() {
                 searchTable.clear()
 
                 for (x in (minX..maxX)) {
+
+                    println("W forze")
+//                    println("${}")
 
                     if (!everythingOK) break
 
@@ -437,8 +490,6 @@ class Room() {
                                     }
 
 
-
-
                                     // -------------------
                                     // check next Cards
                                     // -------------------
@@ -500,10 +551,9 @@ class Room() {
                                         }
                                     }
 
-                                    if (type == cardArrangement.byNumbers){
+                                    if (type == cardArrangement.byNumbers) {
 
-                                    }
-                                    else if(type == cardArrangement.byColors){
+                                    } else if (type == cardArrangement.byColors) {
 //                                        searchTable.
                                     }
 
@@ -533,10 +583,10 @@ class Room() {
 
         }
         //else if(
-            //changeInHandTableA.isNotEmpty()
-            //|| changeInHandTableB.isEmpty()
+        //changeInHandTableA.isNotEmpty()
+        //|| changeInHandTableB.isEmpty()
         //){
-        else  if (availableCards.size != 0) {
+        else if (availableCards.size != 0) {
             // if the player took a card from the board or has not added anything to the board
 //            val id = floor(Math.random() * availableCards.size).toInt()
 //            playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
