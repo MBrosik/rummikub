@@ -65,7 +65,12 @@ class Room() {
 
     fun smallBroadcast(message: String) {
         for (x in playerList) {
-            x?.session?.remote?.sendString(message)
+            try {
+                x?.session?.remote?.sendString(message)
+            }
+            catch (e: Throwable){
+                println(e)
+            }
         }
     }
 
@@ -190,14 +195,16 @@ class Room() {
                                 if (it1 != null) {
                                     mapOf(
                                         "name" to it1.nick,
-                                        "cardsCount" to it1.CardsInHand.size
+                                        "cardsCount" to it1.CardsInHand.size,
+                                        "first_move" to it1.firstMove,
                                     )
                                 } else {
                                     null
                                 }
                             },
                             "YourIndex" to ind,
-                            Pair("turn", playerList[whoseTurn]!!.session == it.session)
+                            Pair("turn", playerList[whoseTurn]!!.session == it.session),
+                            "reason" to "przyczyna nowej rundy"
                         ),
                     )
 
@@ -224,7 +231,7 @@ class Room() {
             corountine = CoroutineScope(EmptyCoroutineContext);
             corountine.launch {
                 println("Po launch")
-                delay(60000000)
+                delay(60000)
                 println("Po delay")
 
 
@@ -341,10 +348,9 @@ class Room() {
         println(parsedSendData.boardCards.find { it.x == null || it.y == null } == null)
 
 
-        // -------------------
-        // if added to hand
-        // tablica kart których nie ma na serwerze
-        // -------------------
+        // -----------------------------
+        // array of added to hand cards
+        // -----------------------------
 
         val changeInHandTableA = parsedSendData.inHandCards.filter {
             playerObject.CardsInHand.find { it1 ->
@@ -352,10 +358,9 @@ class Room() {
             } == null
         }
 
-        // -----------------------
-        // if removed from hand
-        // tablica kart których nie ma na w ręce
-        // -----------------------
+        // --------------------------------
+        // array of removed from hand cards
+        // ---------------------------------
 
         val changeInHandTableB = playerObject.CardsInHand.filter {
             parsedSendData.inHandCards.find { it1 ->
@@ -584,12 +589,41 @@ class Room() {
             }
             if (
                 everythingOK
-                && (cardPoints>=30 || playerObject.firstMove)
+                && (cardPoints>=30 || !playerObject.firstMove)
             ) {
                 board.cards = parsedSendData.boardCards
                 playerObject.CardsInHand = parsedSendData.inHandCards
-                playerObject.firstMove = true;
+                playerObject.firstMove = false;
             } else if (availableCards.size != 0) {
+                val arr1 = parsedSendData.inHandCards.toMutableList();
+
+                val change2 =changeInHandTableB.toList();
+
+                change2.forEach {
+                    var x: Int = 0;
+                    var y: Int = 0;
+
+                    yloop@ for (y1 in (12..14)) {
+                        for (x1 in (0..12)) {
+                            val tempCard = arr1.find { it.x == x1 && it.y == y1 }
+
+                            if (tempCard == null) {
+                                x = x1;
+                                y = y1;
+
+                                break@yloop
+                            }
+                        }
+                    }
+
+                    it.x = x
+                    it.y = y
+
+                    arr1.add(it);
+                }
+
+                playerObject.CardsInHand = arr1;
+
                 drawCard()
             }
             cardPoints = 0;
