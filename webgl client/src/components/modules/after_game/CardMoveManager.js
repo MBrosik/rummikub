@@ -27,7 +27,7 @@ export default class CardMoveManager {
       this.lastX = null;
       this.lastZ = null;
       this.newCard = null;
-      this.first = { x: null, z: null, card: null, color: null, time: false };
+      this.first = { x: null, z: null, card: null, color: null, time: false, id: null };
       this.cardsRow = [];
 
       /**@type {Card} */
@@ -190,66 +190,66 @@ export default class CardMoveManager {
 
       // if (this.startCardZ < 12) {
 
-      if (this.boardMap.map[nowZ][nowX].card != "" && (nowX != this.startCardX || nowZ != this.startCardZ) && this.lastX != this.boardMap.map[nowZ][nowX].card.position.x && this.lastZ != this.boardMap.map[nowZ][nowX].card.position.z) {
-         // if (this.lastNowX == null || this.lastNowZ == null) {
-         console.log("eee")
-         this.lastNowX = nowX;
-         this.lastNowZ = nowZ;
+      // if (this.boardMap.map[nowZ][nowX].card != "" && (nowX != this.startCardX || nowZ != this.startCardZ) && this.lastX != this.boardMap.map[nowZ][nowX].card.position.x && this.lastZ != this.boardMap.map[nowZ][nowX].card.position.z) {
+      //    // if (this.lastNowX == null || this.lastNowZ == null) {
+      //    console.log("eee")
+      //    this.lastNowX = nowX;
+      //    this.lastNowZ = nowZ;
 
-         // }
-         this.lastX = this.boardMap.map[nowZ][nowX].card.position.x;
-         this.lastZ = this.boardMap.map[nowZ][nowX].card.position.z;
+      //    // }
+      //    this.lastX = this.boardMap.map[nowZ][nowX].card.position.x;
+      //    this.lastZ = this.boardMap.map[nowZ][nowX].card.position.z;
 
-         // this.boardMap.map[nowZ][nowX].card.position.x = this.startCardXpos;
-         // this.boardMap.map[nowZ][nowX].card.position.z = this.startCardZpos;
-         this.boardMap.map[nowZ][nowX].card.position.x = this.lastPosX;
-         this.boardMap.map[nowZ][nowX].card.position.z = this.lastPosZ;
-         this.newCard = this.boardMap.map[nowZ][nowX].card;
-         if (this.first.time == false) {
-            this.first.x = Math.floor((this.lastPosX - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
-            this.first.z = Math.floor((this.lastPosZ - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
-            this.first.card = this.newCard;
-            this.first.color = this.boardMap.map[nowZ][nowX].color;
-            this.first.time = true;
-         }
-      }
-      this.lastPosX = this.selected_card.position.x;
-      this.lastPosZ = this.selected_card.position.z;
-      if (this.lastX != null && this.lastZ != null && (this.lastNowX != nowX || this.lastNowZ != nowZ)) {
-         console.log("out")
-         if (this.boardMap.map[nowZ][nowX].card != "" && this.boardMap.map[nowZ][nowX].card != this.boardMap.map[this.startCardZ][this.startCardX].card) {
-            // this.cardsRow[this.cardsRow.length - 1].card.position.x = this.cardsRow[this.cardsRow.length - 1].x;
-            // this.cardsRow[this.cardsRow.length - 1].card.position.y = this.cardsRow[this.cardsRow.length - 1].z;
-         } else {
-            // this.newCard.position.x = this.set.xPos;
-            // this.newCard.position.z = this.set.zPos;
+      //    // this.boardMap.map[nowZ][nowX].card.position.x = this.startCardXpos;
+      //    // this.boardMap.map[nowZ][nowX].card.position.z = this.startCardZpos;
+      //    this.boardMap.map[nowZ][nowX].card.position.x = this.lastPosX;
+      //    this.boardMap.map[nowZ][nowX].card.position.z = this.lastPosZ;
+      //    this.newCard = this.boardMap.map[nowZ][nowX].card;
+      //    if (this.first.time == false) {
+      //       this.first.x = Math.floor((this.lastPosX - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
+      //       this.first.z = Math.floor((this.lastPosZ - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
+      //       this.first.card = this.newCard;
+      //       this.first.color = this.boardMap.map[nowZ][nowX].color;
+      //       this.first.time = true;
+      //    }
+      // }
+      // this.lastPosX = this.selected_card.position.x;
+      // this.lastPosZ = this.selected_card.position.z;
+      // if (this.lastX != null && this.lastZ != null && (this.lastNowX != nowX || this.lastNowZ != nowZ)) {
+      //    console.log("out")
+      //    if (this.boardMap.map[nowZ][nowX].card != "" && this.boardMap.map[nowZ][nowX].card != this.boardMap.map[this.startCardZ][this.startCardX].card) {
+      //       // this.cardsRow[this.cardsRow.length - 1].card.position.x = this.cardsRow[this.cardsRow.length - 1].x;
+      //       // this.cardsRow[this.cardsRow.length - 1].card.position.y = this.cardsRow[this.cardsRow.length - 1].z;
+      //    } else {
+      //       // this.newCard.position.x = this.set.xPos;
+      //       // this.newCard.position.z = this.set.zPos;
 
-            this.boardMap.map.forEach(el => {
-               el.forEach(element => {
-                  if (element.card != "") {
-                     element.card.position.x = element.xPos;
-                     element.card.position.z = element.zPos;
-                  }
-               });
-            });
-         }
+      //       this.boardMap.map.forEach(el => {
+      //          el.forEach(element => {
+      //             if (element.card != "") {
+      //                element.card.position.x = element.xPos;
+      //                element.card.position.z = element.zPos;
+      //             }
+      //          });
+      //       });
+      //    }
 
 
-         // this.boardMap.map.forEach(el => {
-         //    el.forEach(element => {
-         //       if (element.card != "") {
-         //          element.card.position.x = element.xPos;
-         //          element.card.position.z = element.zPos;
-         //       }
-         //    });
-         // });
-         this.lastX = null;
-         this.lastZ = null;
-         this.lastNowX = null;
-         this.lastNowZ = null;
-         this.newCard = null;
+      //    // this.boardMap.map.forEach(el => {
+      //    //    el.forEach(element => {
+      //    //       if (element.card != "") {
+      //    //          element.card.position.x = element.xPos;
+      //    //          element.card.position.z = element.zPos;
+      //    //       }
+      //    //    });
+      //    // });
+      //    this.lastX = null;
+      //    this.lastZ = null;
+      //    this.lastNowX = null;
+      //    this.lastNowZ = null;
+      //    this.newCard = null;
 
-      }
+      // }
       // }
 
       // console.log(startX, x_floor, field.x)
@@ -276,6 +276,7 @@ export default class CardMoveManager {
          // this.boardMap.map[this.startCardZ][this.startCardX].card = this.newCard;
          this.boardMap.map[this.first.z][this.first.x].card = this.first.card;
          this.boardMap.map[this.first.z][this.first.x].color = this.first.color;
+         this.boardMap.map[this.first.z][this.first.x].ID = this.first.id;
          this.first.time = false;
       } else {
          // this.boardMap.map[this.startCardZ][this.startCardX].card = "";
@@ -285,8 +286,10 @@ export default class CardMoveManager {
       let z = Math.floor((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
       this.boardMap.map[z][x].card = this.selected_card;
       this.boardMap.map[z][x].color = this.boardMap.map[this.startCardZ][this.startCardX].color;
+      this.boardMap.map[z][x].ID = this.boardMap.map[this.startCardZ][this.startCardX].ID;
       this.boardMap.map[this.startCardZ][this.startCardX].card = "";
       this.boardMap.map[this.startCardZ][this.startCardX].color = "";
+      this.boardMap.map[this.startCardZ][this.startCardX].ID = "";
       this.selected_card = undefined
       console.log(this.boardMap.map)
       document.body.style.cursor = "grab"
