@@ -11,7 +11,8 @@ export default class CameraColider extends Raycaster {
     * @param {Number} depthScale
     * @param {Mesh[]} meshes 
     */
-   constructor(camera, ...meshes) {
+   // constructor(camera, ...meshes) {
+   constructor(camera, meshes) {
       super()
       this.camera = camera;
       this.meshes = meshes;
@@ -40,7 +41,7 @@ export default class CameraColider extends Raycaster {
 
       this.mouseVector.set(x, y)
       this.setFromCamera(this.mouseVector, this.camera);
-      return this.intersectObjects(this.meshes[0], true);
+      return this.intersectObjects(this.meshes, true);
 
       // let aa = this.intersectObjects(this.meshes)[0];
    }

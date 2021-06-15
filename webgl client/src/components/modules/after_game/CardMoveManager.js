@@ -39,7 +39,8 @@ export default class CardMoveManager {
       // ------------------
       // camera Coliders
       // ------------------
-      this.cardsCameraColider = new CameraColider(this.camera, ...this.cards)
+      // this.cardsCameraColider = new CameraColider(this.camera, ...this.cards)
+      this.cardsCameraColider = new CameraColider(this.camera, this.cards)
 
       // let card_arr = this.cards.map(el=>el.children.map())
       // let card_arr = [];
@@ -64,11 +65,27 @@ export default class CardMoveManager {
    }
 
    listenersAdd() {
+      // this.boardMap.map.forEach(el => {
+      //    el.forEach(element => {
+      //       if (element.card != "") {
+      //          element.card.position.x = element.xPos;
+      //          element.card.position.z = element.zPos;
+      //       }
+      //    });
+      // });
       window.addEventListener("mousedown", this.mousedown_ev_bind)
       window.addEventListener("mousemove", this.mousemove_ev_bind)
       window.addEventListener("mouseup", this.mouseup_ev_bind)
    }
    listenersRemove() {
+      // this.boardMap.map.forEach(el => {
+      //    el.forEach(element => {
+      //       if (element.card != "") {
+      //          element.card.position.x = element.xPos;
+      //          element.card.position.z = element.zPos;
+      //       }
+      //    });
+      // });
       window.removeEventListener("mousedown", this.mousedown_ev_bind)
       window.removeEventListener("mousemove", this.mousemove_ev_bind)
       window.removeEventListener("mouseup", this.mouseup_ev_bind)
@@ -90,6 +107,7 @@ export default class CardMoveManager {
        */
       // console.log(this.cardsCameraColider.getIntersects(e));
       this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object.parent.parent;
+
       if (this.selected_card != undefined) {
          this.startCardX = Math.floor((this.selected_card.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
          this.startCardZ = Math.floor((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
@@ -114,7 +132,6 @@ export default class CardMoveManager {
     */
    mousemove_ev(e) {
       if (this.selected_card == undefined) return
-
       /**
        * Pobieram dane pozycji 
        */
@@ -172,8 +189,10 @@ export default class CardMoveManager {
 
 
       // if (this.startCardZ < 12) {
+
       if (this.boardMap.map[nowZ][nowX].card != "" && (nowX != this.startCardX || nowZ != this.startCardZ) && this.lastX != this.boardMap.map[nowZ][nowX].card.position.x && this.lastZ != this.boardMap.map[nowZ][nowX].card.position.z) {
          // if (this.lastNowX == null || this.lastNowZ == null) {
+         console.log("eee")
          this.lastNowX = nowX;
          this.lastNowZ = nowZ;
 
@@ -204,6 +223,7 @@ export default class CardMoveManager {
          } else {
             // this.newCard.position.x = this.set.xPos;
             // this.newCard.position.z = this.set.zPos;
+
             this.boardMap.map.forEach(el => {
                el.forEach(element => {
                   if (element.card != "") {
@@ -232,7 +252,7 @@ export default class CardMoveManager {
       }
       // }
 
-
+      // console.log(startX, x_floor, field.x)
       this.selected_card.position.x = startX + x_floor + field.x
       this.selected_card.position.z = startZ + y_floor + field.z
    }
