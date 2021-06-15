@@ -1,6 +1,6 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 export default class addIntoRooms {
-    constructor(camera, container) {
+    constructor(camera, container, sendThruButton) {
         this.camera = camera;
         this.container = container;
         this.forEachNick = document.createElement('div');
@@ -46,13 +46,24 @@ export default class addIntoRooms {
         this.toggleControls.onclick = () => {
             this.toggle();
         }
+
+        this.divForButton = document.createElement('div')
+        this.divForButton.id = "divForButton";
+        document.body.appendChild(this.divForButton);
+        this.buttonSend = document.createElement('button');
+        this.buttonSend.id = "buttonSend";
+        this.buttonSend.innerText = "Send";
+        this.divForButton.appendChild(this.buttonSend);
+        this.buttonSend.onclick = () => {
+            sendThruButton();
+        }
     }
     insertNicks(allNicks) {
         this.allNicks = allNicks;
         this.allNicks.forEach(element => {
             this.newText = document.createElement('p');
             this.newText.className = "newText";
-            this.newText.innerText = element.players;
+            this.newText.innerText = element.name;
             let id = this.allNicks.indexOf(element);
             this.divs[id].appendChild(this.newText);
         });
@@ -70,4 +81,5 @@ export default class addIntoRooms {
             this.cameraControls.enabled = false;
         }
     }
+
 }

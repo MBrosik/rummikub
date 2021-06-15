@@ -11,6 +11,7 @@ export default class addIntoRooms {
         this.upperText.innerText = "Nowa gra";
         this.createInputManager.appendChild(this.upperText);
         this.inputNick = document.createElement('input');
+        this.inputNick.autocomplete = "off";
         this.inputNick.id = "inputNick";
         this.inputNick.placeholder = "Podaj nick";
         this.createInputManager.appendChild(this.inputNick);
