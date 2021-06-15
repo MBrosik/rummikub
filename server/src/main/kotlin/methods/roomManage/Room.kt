@@ -224,7 +224,7 @@ class Room() {
             corountine = CoroutineScope(EmptyCoroutineContext);
             corountine.launch {
                 println("Po launch")
-                delay(60000)
+                delay(60000000)
                 println("Po delay")
 
 
@@ -418,10 +418,10 @@ class Room() {
                         // ---------------------
                         // check table size
                         // ---------------------
-                        if (searchTable.size < 3) {
+                        if (searchTable.size in 1..2) {
                             everythingOK = false;
                             break;
-                        } else {
+                        } else if(searchTable.size>=3){
 
                             // ---------------------
                             // check if all joker
@@ -575,7 +575,9 @@ class Room() {
                             continue;
                         }
                     }
-                    searchTable.add(card)
+                    if (card != null) {
+                        searchTable.add(card)
+                    }
                 }
 
                 if (!everythingOK) break;
