@@ -130,7 +130,7 @@ class Room() {
                     val id = floor(Math.random() * availableCards.size).toInt()
                     val card = availableCards[id]
                     card.x = x
-                    card.y = 0
+                    card.y = 12
                     it.CardsInHand.add(card)
                     availableCards.removeAt(id);
                 }
@@ -279,43 +279,19 @@ class Room() {
             // -----------------
             // set min max
             // -----------------
-//            val xTable = parsedSendData.boardCards.map { it.x!!.toDouble() }.sorted();
-//            val yTable = parsedSendData.boardCards.map { it.y!!.toDouble() }.sorted();
 
-//            val xTable = playerList[whoseTurn]!!.CardsInHand.map { it.x!!.toDouble() }.sorted();
-//            val yTable = playerList[whoseTurn]!!.CardsInHand.map { it.y!!.toDouble() }.sorted();
+            var x: Int = 0;
+            var y: Int = 0;
 
-//            val minX = xTable[0].toInt();
-//            val maxX = xTable[xTable.size - 1].toInt();
-//
-//            val minY = yTable[0].toInt();
-//            val maxY = yTable[yTable.size - 1].toInt();
-
-//            var card1 = null;
-
-//            outerloop@ for (i in 0..4) {
-//                for (j in 0..4) {
-//                    if (i * j > 6) {
-//                        println("Breaking")
-//                        break@outerloop
-//                    }
-//                    println("$i $j")
-//                }
-//            }
-//            println("Done")
-
-            var x:Int;
-            var y:Int;
-
-            xloop@for ( x1 in (0..12)) {
-                for (y1 in (0..12)) {
+            yloop@ for (y1 in (12..14)) {
+                for (x1 in (0..12)) {
                     val tempCard = playerList[whoseTurn]!!.CardsInHand.find { it.x == x1 && it.y == y1 }
 
                     if (tempCard == null) {
                         x = x1;
                         y = y1;
 
-                        break@xloop
+                        break@yloop
                     }
                 }
             }
@@ -325,7 +301,8 @@ class Room() {
             val card = availableCards[id]
 
 
-            card.x =
+            card.x = x
+            card.y = y
 
 
             playerList[whoseTurn]!!.CardsInHand.add(card);
@@ -336,6 +313,7 @@ class Room() {
     fun playerFinishedTurn(userData: SessionStructure, sendData: Any) {
         val playerObject = playerList.find { it!!.session == userData.session }!!
         println(sendData);
+        println(Gson().toJson(sendData))
 
         val parsedSendData = Gson().fromJson(Gson().toJson(sendData), PlayerMessage::class.java);
         if (userData.session != playerList[whoseTurn]!!.session) return;
@@ -372,8 +350,8 @@ class Room() {
         var points: Int = 0;
         if (
             parsedSendData.boardCards.find { it.x == null || it.y == null } == null
-            && changeInHandTableA.isEmpty()
-            && changeInHandTableB.isNotEmpty()
+//            && changeInHandTableA.isEmpty()
+//            && changeInHandTableB.isNotEmpty()
             && parsedSendData.boardCards.isNotEmpty()
         ) {
 

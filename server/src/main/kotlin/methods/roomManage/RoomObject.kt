@@ -77,6 +77,7 @@ object RoomObject {
                 }
             }
         }
+        userData.roomClass!!.sendUsersList();
         roomList.removeIf { it.playerList.filterNotNull().isEmpty() }
     }
 }
