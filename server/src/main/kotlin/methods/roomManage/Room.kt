@@ -200,7 +200,14 @@ class Room() {
                             Pair("turn", playerList[whoseTurn]!!.session == it.session)
                         ),
                     )
-                    it.session.remote.sendString(Gson().toJson(send));
+
+                    try {
+                        it.session.remote.sendString(Gson().toJson(send));
+                    }
+                    catch (e: Throwable){
+                        println("Błąd z endpointem")
+                        println(e)
+                    }
                 }
             }
 
