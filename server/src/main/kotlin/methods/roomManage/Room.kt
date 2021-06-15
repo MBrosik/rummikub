@@ -37,13 +37,13 @@ class Room() {
         for (z in (0..1)) {
             for (x in (1..13)) {
                 for (y in colorTypes.values()) {
-                    availableCards.add(Card( x.toString(), y))
+                    availableCards.add(Card(id, x.toString(), y))
                     id++;
                 }
             }
 
             listOf<colorTypes>(colorTypes.black, colorTypes.red).forEach {
-                availableCards.add(Card( "joker", it))
+                availableCards.add(Card( id,"joker", it))
                 id++
             }
         }
@@ -55,6 +55,7 @@ class Room() {
         availableCards.forEach {
             val card = Gson().toJson(
                 mapOf(
+                    "id" to it.ID,
                     "name" to it.name,
                     "color" to it.color
                 )
@@ -128,7 +129,10 @@ class Room() {
 
                 for (x in (0..10)) {
                     val id = floor(Math.random() * availableCards.size).toInt()
-                    it.CardsInHand.add(availableCards[id])
+                    val card = availableCards[id]
+                    card.x = x
+                    card.y = 0
+                    it.CardsInHand.add(card)
                     availableCards.removeAt(id);
                 }
 
@@ -186,7 +190,8 @@ class Room() {
                             "playerlist" to playerList.map { it1 ->
                                 if (it1 != null) {
                                     mapOf(
-                                        "players" to it1.nick
+                                        "name" to it1.nick,
+                                        "cardsCount" to it1.CardsInHand.size
                                     )
                                 } else {
                                     null
@@ -226,11 +231,13 @@ class Room() {
 
                     board.curentCards.clear();
 
-                    if (availableCards.size != 0) {
-                        val id = floor(Math.random() * availableCards.size).toInt()
-                        playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
-                        availableCards.removeAt(id)
-                    }
+//                    if (availableCards.size != 0) {
+//                        val id = floor(Math.random() * availableCards.size).toInt()
+//                        playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
+//                        availableCards.removeAt(id)
+//                    }
+
+                    drawCard();
 
                     do {
                         whoseTurn++;
@@ -265,6 +272,14 @@ class Room() {
             }
         }
 
+    }
+
+    fun drawCard(){
+        if (availableCards.size != 0) {
+            val id = floor(Math.random() * availableCards.size).toInt()
+            playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
+            availableCards.removeAt(id)
+        }
     }
 
     fun playerFinishedTurn(userData: SessionStructure, sendData: Any) {
@@ -304,10 +319,12 @@ class Room() {
             } == null
         }
 
+        var points:Int = 0;
         if (
             parsedSendData.boardCards.find { it.x == null || it.y == null } == null
-            || changeInHandTableA.isEmpty()
-            || changeInHandTableB.isNotEmpty()
+            && changeInHandTableA.isEmpty()
+            && changeInHandTableB.isNotEmpty()
+            && parsedSendData.boardCards.isNotEmpty()
         ) {
 
 
@@ -365,6 +382,7 @@ class Room() {
 
                             if (firstCard != null) {
                                 var firstIndex = searchTable.indexOf(firstCard);
+                                val preFirstIndex = firstIndex;
 
                                 // ------------------------------
                                 // check if firstCard is not last
@@ -417,6 +435,9 @@ class Room() {
                                         }
 
                                     }
+
+
+
 
                                     // -------------------
                                     // check next Cards
@@ -478,6 +499,15 @@ class Room() {
                                             }
                                         }
                                     }
+
+                                    if (type == cardArrangement.byNumbers){
+
+                                    }
+                                    else if(type == cardArrangement.byColors){
+//                                        searchTable.
+                                    }
+
+
                                 }
                             }
 
@@ -495,20 +525,23 @@ class Room() {
                 playerObject.CardsInHand = parsedSendData.inHandCards
 
             } else if (availableCards.size != 0) {
-                val id = floor(Math.random() * availableCards.size).toInt()
-                playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
-                availableCards.removeAt(id)
+//                val id = floor(Math.random() * availableCards.size).toInt()
+//                playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
+//                availableCards.removeAt(id)
+                drawCard()
             }
 
         }
-        else if(
-            changeInHandTableA.isNotEmpty()
-            || changeInHandTableB.isEmpty()
-        ){
+        //else if(
+            //changeInHandTableA.isNotEmpty()
+            //|| changeInHandTableB.isEmpty()
+        //){
+        else  if (availableCards.size != 0) {
             // if the player took a card from the board or has not added anything to the board
-            val id = floor(Math.random() * availableCards.size).toInt()
-            playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
-            availableCards.removeAt(id)
+//            val id = floor(Math.random() * availableCards.size).toInt()
+//            playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
+//            availableCards.removeAt(id)
+            drawCard()
         }
         board.curentCards.clear();
 
