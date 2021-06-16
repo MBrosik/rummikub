@@ -128,33 +128,33 @@ export default class Main {
 
       let messageFunc = null;
 
-      new Promise(res => {
+      // new Promise(res => {
 
-         messageFunc = (ev) => {
-            /**@type {{type:String, data:String}} */
-            let parsedData = JSON.parse(ev.data);
+      messageFunc = (ev) => {
+         /**@type {{type:String, data:String}} */
+         let parsedData = JSON.parse(ev.data);
 
-            // if (parsedData.type == "onAddedToRoom") {
-            //    this.interface.insertNicks(this.allNicks)
-            //    console.log(parsedData.data)
+         // if (parsedData.type == "onAddedToRoom") {
+         //    this.interface.insertNicks(this.allNicks)
+         //    console.log(parsedData.data)
 
+         // }
+         if (parsedData.type == "players_list") {
+            console.log(parsedData.data)
+            this.allNicks = parsedData.data.playerList;
+            console.log(this.allNicks)
+            this.interface.insertNicks(this.allNicks);
+            // if (this.allNicks.every(el => el != null)) {
+            // my_WS.removeEventListener("message", messageFunc)
             // }
-            if (parsedData.type == "players_list") {
-               console.log(parsedData.data)
-               this.allNicks = parsedData.data.playerList;
-               console.log(this.allNicks)
-               this.interface.insertNicks(this.allNicks);
-               if (this.allNicks.every(el => el != null)) {
-                  my_WS.removeEventListener("message", messageFunc)
-               }
-               res();
-            }
+            // res();
          }
+      }
 
-         my_WS.addEventListener("message", messageFunc)
-      }).then(() => {
+      my_WS.addEventListener("message", messageFunc)
+      // }).then(() => {
 
-      })
+      // })
 
 
 
@@ -185,7 +185,19 @@ export default class Main {
       my_WS.removeEventListener("message", messageFunc1)
       my_WS.addEventListener("message", (e) => {
          // console.log(JSON.parse(e.data));
-         this.whileGame(JSON.parse(e.data));
+         let parsedData = JSON.parse(e.data);
+         if (parsedData.type == "WhileGame") {
+            this.whileGame(JSON.parse(e.data));
+         } else if (parsedData.type == "GameEnded") {
+            if (parsedData.data.youAreWinner == true) {
+               console.log("You won: " + parsedData.data.winnerName)
+               this.interface.addWinnerDiv("Brawo! wygrywasz grę: " + parsedData.data.winnerName + " !!!")
+            } else {
+               console.log("You lose, the winner is: " + parsedData.data.winnerName + " :(")
+               this.interface.addWinnerDiv("Przegrałeś :( wygrał: " + parsedData.data.winnerName + ", jestem pewien, że następnym razem ci się uda ;P")
+            }
+         }
+
       })
    }
 
@@ -210,6 +222,7 @@ export default class Main {
                element.card = "";
                element.color = "";
                element.ID = "";
+               element.out = "";
             }
          });
       });
@@ -242,6 +255,7 @@ export default class Main {
             this.card_move_manager.boardMap.map[element.y][element.x].card = card;
             this.card_move_manager.boardMap.map[element.y][element.x].color = strCard;
             this.card_move_manager.boardMap.map[element.y][element.x].ID = element.ID;
+            this.card_move_manager.boardMap.map[element.y][element.x].out = cardOutLine;
          }
       });
 
@@ -272,6 +286,7 @@ export default class Main {
             this.card_move_manager.boardMap.map[element.y][element.x].card = card;
             this.card_move_manager.boardMap.map[element.y][element.x].color = strCard;
             this.card_move_manager.boardMap.map[element.y][element.x].ID = element.ID;
+            this.card_move_manager.boardMap.map[element.y][element.x].out = cardOutLine;
          }
 
       });
