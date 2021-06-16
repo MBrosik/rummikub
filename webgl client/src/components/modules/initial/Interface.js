@@ -114,7 +114,7 @@ export default class addIntoRooms {
         this.timerDivS = [];
         this.timerDiv = document.createElement('div');
         this.timerDiv.className = "timerDiv";
-        this.timerDiv.innerText = "time";
+        this.timerDiv.innerText = "";
         this.timerDivS.push(this.timerDiv)
         this.timerDivsOut[turn].appendChild(this.timerDiv);
     }

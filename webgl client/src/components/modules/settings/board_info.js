@@ -25,7 +25,7 @@ export const SMALLER_SIZE_X = {
 export const SMALLER_SIZE_Y = {
    width: BOARD_SIZE.width / 4,
    height: BOARD_SIZE.height,
-   depth: BOARD_SIZE.depth,
+   depth: BOARD_SIZE.depth + BOARD_SIZE.depth / 2,
 }
 
 export const SMALLER_POSITION = [
@@ -37,7 +37,7 @@ export const SMALLER_POSITION = [
    {
       x: BOARD_SIZE.width / 2 + SMALLER_SIZE_Y.width / 2,
       y: BOARD_POSITION.y,
-      z: (BOARD_SIZE.width / 2 - SMALLER_SIZE_Y.depth / 2) * -1,
+      z: ((BOARD_SIZE.width / 2 - SMALLER_SIZE_Y.depth / 2) * -1) - SMALLER_SIZE_Y.width,
    },
    {
       x: (BOARD_SIZE.width / 2 - SMALLER_SIZE_X.width / 2) * -1,
@@ -47,7 +47,7 @@ export const SMALLER_POSITION = [
    {
       x: (BOARD_SIZE.width / 2 + SMALLER_SIZE_Y.width / 2) * -1,
       y: BOARD_POSITION.y,
-      z: (BOARD_SIZE.width / 2 - SMALLER_SIZE_Y.depth / 2) * -1,
+      z: ((BOARD_SIZE.width / 2 - SMALLER_SIZE_Y.depth / 2) * -1) - SMALLER_SIZE_Y.width,
    }
 ]
 
