@@ -16,6 +16,9 @@ export default class addIntoRooms {
             this.forEachNick.appendChild(forNicksNow);
             let nickDiv = document.createElement('div');
             nickDiv.className = "nickDiv";
+            console.log("eee2")
+            nickDiv.style.backgroundColor = "rgba(194, 194, 194, 0.5)";
+            nickDiv.innerHTML = "nieaktywny...";
             this.divs.push(nickDiv);
             forNicksNow.appendChild(nickDiv);
             this.timerDivsOut.push(forNicksNow);
@@ -70,11 +73,21 @@ export default class addIntoRooms {
         this.allNicks.forEach(element => {
             if (element != null) {
                 let id = this.allNicks.indexOf(element);
+                console.log("eee")
                 this.divs[id].innerHTML = "";
+                this.divs[id].style.backgroundColor = "rgba(2, 72, 224, 0.5)";
                 this.newText = document.createElement('p');
                 this.newText.className = "newText";
                 this.newText.innerText = element.name;
                 this.divs[id].appendChild(this.newText);
+            } else {
+                let id = this.allNicks.indexOf(element);
+                this.divs[id].innerHTML = "";
+                // this.divs[id].style.backgroundColor = "rgba(194, 194, 194, 0.5)";
+                // this.newText = document.createElement('p');
+                // this.newText.className = "newText";
+                this.divs[id].innerHTML = "nieaktywny...";
+                // this.divs[id].appendChild(this.newText);
             }
         });
     }
@@ -110,6 +123,21 @@ export default class addIntoRooms {
         allThem.forEach(element => {
             element.remove();
         });
+    }
+    addWinnerDiv(text) {
+        this.winnerDiv = document.createElement('div');
+        this.winnerDiv.id = "winnerDiv";
+        this.innerTextWin = document.createElement('p');
+        this.innerTextWin.innerText = text;
+        document.body.appendChild(this.winnerDiv);
+        this.winnerDiv.appendChild(this.innerTextWin);
+        this.buttonReset = document.createElement('div')
+        this.buttonReset.id = "buttonReset";
+        this.buttonReset.innerText = "Zagraj jeszczę raz"
+        this.buttonReset.onclick = () => {
+            window.location.reload();
+        }
+        this.winnerDiv.appendChild(this.buttonReset);
     }
 
 }
