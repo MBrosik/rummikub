@@ -271,6 +271,7 @@ class Room() {
             playerList.forEach {
 
                 if (it != null) {
+                    println(it)
                     val send = MessageData(
                         "GameEnded",
                         mutableMapOf<String, Any>(
@@ -278,8 +279,23 @@ class Room() {
                             "youAreWinner" to (it == winnerPlayer)
                         ),
                     )
-                    WebSocketObject.sessions[it.hashCode()]!!.roomClass = null
-                    it.session.remote.sendString(Gson().toJson(send));
+                    try {
+                        println(WebSocketObject.sessions[it.hashCode()]);
+                        println(WebSocketObject.sessions[it.hashCode()]!!.roomClass)
+                        println(it.session)
+                        WebSocketObject.sessions[it.hashCode()]!!.roomClass = null
+                    }
+                    catch(e:Throwable){
+                        println("Problem")
+                        println(e)
+                    }
+                    try {
+                        it.session.remote.sendString(Gson().toJson(send));
+                    }
+                    catch(e:Throwable){
+                        println("Problem")
+                        println(e)
+                    }
                 }
             }
         }
@@ -590,11 +606,16 @@ class Room() {
             if (
                 everythingOK
                 && (cardPoints>=30 || !playerObject.firstMove)
+//                true
             ) {
+                println("Jeżeli wszystko OK")
+                println(cardPoints)
                 board.cards = parsedSendData.boardCards
                 playerObject.CardsInHand = parsedSendData.inHandCards
                 playerObject.firstMove = false;
             } else if (availableCards.size != 0) {
+                println("Jeżeli nie jest wszystko ok")
+                println(cardPoints)
                 val arr1 = parsedSendData.inHandCards.toMutableList();
 
                 val change2 =changeInHandTableB.toList();
