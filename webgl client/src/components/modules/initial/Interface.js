@@ -6,7 +6,8 @@ export default class addIntoRooms {
         this.forEachNick = document.createElement('div');
         this.forEachNick.id = "forEachNick";
         this.divs = []
-        this.timerDivs = []
+        this.timerDivsOut = []
+        this.timerDivS = []
         this.toggled = false;
         document.body.appendChild(this.forEachNick);
         for (let i = 0; i < 4; i++) {
@@ -17,7 +18,7 @@ export default class addIntoRooms {
             nickDiv.className = "nickDiv";
             this.divs.push(nickDiv);
             forNicksNow.appendChild(nickDiv);
-            this.timerDivs.push(forNicksNow);
+            this.timerDivsOut.push(forNicksNow);
         }
         //add menu
         this.menu = document.createElement('div');
@@ -96,14 +97,19 @@ export default class addIntoRooms {
     removeButton() {
         this.buttonSend.style.right = "-150px";
     }
-    // addTimer(turn) {
-    //     this.timerDiv = document.createElement('div');
-    //     this.timerDiv.id = "timerDiv";
-    //     this.timerDiv.innerText = "time";
-    //     this.timerDivs[turn].appendChild(this.timerDiv);
-    // }
-    // removeTimer() {
-
-    // }
+    addTimer(turn) {
+        this.timerDivS = [];
+        this.timerDiv = document.createElement('div');
+        this.timerDiv.className = "timerDiv";
+        this.timerDiv.innerText = "time";
+        this.timerDivS.push(this.timerDiv)
+        this.timerDivsOut[turn].appendChild(this.timerDiv);
+    }
+    removeTimer() {
+        let allThem = document.querySelectorAll(".timerDiv");
+        allThem.forEach(element => {
+            element.remove();
+        });
+    }
 
 }

@@ -45,4 +45,14 @@ export default class CameraColider extends Raycaster {
 
       // let aa = this.intersectObjects(this.meshes)[0];
    }
+   getIntersects3(e, outlineCards) {
+      let x = (e.pageX / window.innerWidth) * 2 - 1;
+      let y = -(e.pageY / window.innerHeight) * 2 + 1;
+
+      this.mouseVector.set(x, y)
+      this.setFromCamera(this.mouseVector, this.camera);
+      return this.intersectObjects(outlineCards, true);
+
+      // let aa = this.intersectObjects(this.meshes)[0];
+   }
 }
