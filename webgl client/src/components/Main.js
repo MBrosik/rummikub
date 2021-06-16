@@ -14,6 +14,7 @@ import LoadCards from './modules/utils/LoadCards';
 import Game_Board from './modules/map_elements/Game_Board';
 import Smaller_Board from './modules/map_elements/Smaller_Board';
 import Card from './modules/map_elements/Card';
+import CardOutLine from './modules/map_elements/CardOutLine';
 import { BOARD_SIZE, BOARD_POSITION, FIELD, FIELDS_COUNT } from './modules/settings/board_info';
 import Map from './modules/map_elements/Map';
 import CardMoveManager from './modules/after_game/CardMoveManager';
@@ -43,6 +44,9 @@ export default class Main {
       this.keyboard = new Keyboard();
       this.turn = false;
       this.allCards = [];
+      this.outlineCards = [];
+      this.readyDivs = [];
+      console.warn = function () { };
 
       this.renderer.render_update(this.scene, this.camera);
 
@@ -100,6 +104,7 @@ export default class Main {
       // ----------------------
 
       this.cards_resources = await LoadCards();
+      this.cards_resourcesv2 = await LoadCards();
 
       console.log(this.cards_resources)
 
@@ -192,18 +197,23 @@ export default class Main {
          this.scene.remove(element);
       });
 
+
+
       this.allCards = []
       this.cards.splice(0)
+      this.outlineCards.splice(0)
 
-      this.boardMapGet = this.card_move_manager.boardMap.map;
 
-      this.boardMapGet.forEach(el => {
+      this.card_move_manager.boardMap.map.forEach(el => {
          el.forEach(element => {
             if (element.card != "") {
                element.card = "";
+               element.color = "";
+               element.ID = "";
             }
          });
       });
+      console.log(this.card_move_manager.boardMap.map)
 
       this.dataPlayers.data.boardCards.forEach(element => {
          let strCard = ""
@@ -214,16 +224,24 @@ export default class Main {
          }
          if (element.x != undefined && element.y != undefined) {
             let card = new Card(
-               this.cards_resources[strCard].mesh,
-               new Vector3(this.boardMapGet[element.y][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMapGet[element.y][element.x].zPos),
+               this.cards_resources[strCard].mesh.clone(true),
+               new Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
+               this.meshees
+            );
+            this.scene.add(card);
+            let cardOutLine = new CardOutLine(
+               this.cards_resourcesv2[strCard].mesh.clone(true),
+               new Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
                this.meshees
             );
             this.cards.push(card);
             this.allCards.push(card);
-            this.scene.add(card);
-            this.boardMap.map[element.y][element.x].card = card;
-            this.boardMap.map[element.y][element.x].color = strCard;
-            this.boardMap.map[element.y][element.x].ID = element.ID;
+            this.allCards.push(cardOutLine);
+            this.outlineCards.push(cardOutLine)
+            this.scene.add(cardOutLine);
+            this.card_move_manager.boardMap.map[element.y][element.x].card = card;
+            this.card_move_manager.boardMap.map[element.y][element.x].color = strCard;
+            this.card_move_manager.boardMap.map[element.y][element.x].ID = element.ID;
          }
       });
 
@@ -236,36 +254,55 @@ export default class Main {
          }
          if (element.x != undefined && element.y != undefined) {
             let card = new Card(
-               this.cards_resources[strCard].mesh,
-               new Vector3(this.boardMapGet[element.y][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.boardMapGet[element.y][element.x].zPos),
+               this.cards_resources[strCard].mesh.clone(true),
+               new Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
+               this.meshees
+            );
+            this.scene.add(card);
+            let cardOutLine = new CardOutLine(
+               this.cards_resourcesv2[strCard].mesh.clone(true),
+               new Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, BOARD_POSITION.y + (BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
                this.meshees
             );
             this.cards.push(card);
             this.allCards.push(card);
-            this.scene.add(card);
-            this.boardMap.map[element.y][element.x].card = card;
-            this.boardMap.map[element.y][element.x].color = strCard;
-            this.boardMap.map[element.y][element.x].ID = element.ID;
+            this.allCards.push(cardOutLine);
+            this.outlineCards.push(cardOutLine)
+            this.scene.add(cardOutLine);
+            this.card_move_manager.boardMap.map[element.y][element.x].card = card;
+            this.card_move_manager.boardMap.map[element.y][element.x].color = strCard;
+            this.card_move_manager.boardMap.map[element.y][element.x].ID = element.ID;
          }
 
       });
 
+      //tura
+      this.interface.divs.forEach(element => {
+         element.style.backgroundColor = "rgba(2, 72, 224, 0.5)";
+      });
+      this.interface.divs[this.dataPlayers.data.whoseTurn].style.backgroundColor = "rgba(2, 224, 2, 0.5)";
+
+      this.interface.divs[this.dataPlayers.data.YourIndex].style.border = "3px solid rgb(185, 43, 251)";
+      this.interface.removeTimer();
+      this.interface.addTimer(this.dataPlayers.data.whoseTurn);
+
       if (this.dataPlayers.data.turn == true) {
+         this.interface.addButton();
          this.turn = true;
          this.card_move_manager.listenersAdd();
       } else {
          if (this.turn == true) {
             console.log("done")
-
+            this.interface.removeButton();
             // console.log(this.boardMapGet);
          }
          this.turn = false;
          this.card_move_manager.listenersRemove();
       }
 
-      this.card_move_manager.boardMap.map = this.boardMapGet;
-      this.card_move_manager.cards = this.cards;
-      this.card_move_manager.cardsCameraColider.cards = this.cards;
+      // this.card_move_manager.boardMap.map = this.boardMapGet;
+      // this.card_move_manager.cards = this.cards;
+      // this.card_move_manager.cardsCameraColider.cards = this.cards;
 
       console.log("whilegame")
    }
@@ -327,7 +364,7 @@ export default class Main {
 
       console.log("ee")
       this.refreshHand(this.drawnCards);
-      this.card_move_manager = new CardMoveManager(this.camera, this.meshees, this.cards, this.renderer, this.boardMap, this.turn);
+      this.card_move_manager = new CardMoveManager(this.camera, this.meshees, this.cards, this.renderer, this.boardMap, this.turn, this.outlineCards);
       // this.whileGame();
    }
 

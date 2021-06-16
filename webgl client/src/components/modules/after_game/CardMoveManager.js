@@ -11,7 +11,7 @@ export default class CardMoveManager {
     * @param {import("../map_elements/Game_Board").default} game_board 
     * @param {Renderer} renderer
     */
-   constructor(camera, meshees, cards, renderer, boardMap, turn) {
+   constructor(camera, meshees, cards, renderer, boardMap, turn, outlineCards) {
       this.camera = camera
       this.meshees = meshees;
       this.game_board = meshees[0];
@@ -19,6 +19,7 @@ export default class CardMoveManager {
       this.renderer = renderer;
       this.boardMap = boardMap;
       this.turn = turn;
+      this.outlineCards = outlineCards;
 
       this.startCardX = null;
       this.startCardZ = null;
@@ -41,7 +42,6 @@ export default class CardMoveManager {
       // ------------------
       // this.cardsCameraColider = new CameraColider(this.camera, ...this.cards)
       this.cardsCameraColider = new CameraColider(this.camera, this.cards)
-
       // let card_arr = this.cards.map(el=>el.children.map())
       // let card_arr = [];
 
@@ -107,12 +107,14 @@ export default class CardMoveManager {
        */
       // console.log(this.cardsCameraColider.getIntersects(e));
       this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object.parent.parent;
+      this.selected_outlinecard = this.cardsCameraColider.getIntersects3(e, this.outlineCards)[0]?.object.parent.parent;
+      console.log(this.selected_outlinecard)
 
       if (this.selected_card != undefined) {
          this.startCardX = Math.floor((this.selected_card.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
          this.startCardZ = Math.floor((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
-         this.startCardXpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.x;
-         this.startCardZpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.z;
+         // this.startCardXpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.x;
+         // this.startCardZpos = this.boardMap.map[this.startCardZ][this.startCardX].card.position.z;
       }
       // this.selected_card = this.cardsCameraColider.getIntersects(e)[0]?.object;
       // console.log(this.selected_card)
@@ -253,8 +255,14 @@ export default class CardMoveManager {
       // }
 
       // console.log(startX, x_floor, field.x)
-      this.selected_card.position.x = startX + x_floor + field.x
-      this.selected_card.position.z = startZ + y_floor + field.z
+      this.selected_card.position.x = this.board_intersect.point.x
+      this.selected_card.position.z = this.board_intersect.point.z
+      // console.log(this.board_intersect.point.x)
+      if (this.selected_outlinecard != undefined) {
+         // console.log(startX, x_floor, field.x)
+         this.selected_outlinecard.position.x = startX + x_floor + field.x
+         this.selected_outlinecard.position.z = startZ + y_floor + field.z
+      }
    }
 
 
@@ -265,7 +273,8 @@ export default class CardMoveManager {
     */
    mouseup_ev(e) {
       if (this.selected_card == undefined) return
-
+      this.selected_card.position.x = this.selected_outlinecard.position.x
+      this.selected_card.position.z = this.selected_outlinecard.position.z
       /**
        * Na podniesienie klawisza odznaczam zaznaczony obiekt
        */
@@ -292,6 +301,6 @@ export default class CardMoveManager {
       this.boardMap.map[this.startCardZ][this.startCardX].ID = "";
       this.selected_card = undefined
       console.log(this.boardMap.map)
-      document.body.style.cursor = "grab"
+      this.renderer.domElement.style.cursor = "grab"
    }
 }

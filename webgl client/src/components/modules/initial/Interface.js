@@ -6,13 +6,19 @@ export default class addIntoRooms {
         this.forEachNick = document.createElement('div');
         this.forEachNick.id = "forEachNick";
         this.divs = []
+        this.timerDivsOut = []
+        this.timerDivS = []
         this.toggled = false;
         document.body.appendChild(this.forEachNick);
         for (let i = 0; i < 4; i++) {
+            let forNicksNow = document.createElement('div');
+            forNicksNow.className = "forNicksNow";
+            this.forEachNick.appendChild(forNicksNow);
             let nickDiv = document.createElement('div');
             nickDiv.className = "nickDiv";
             this.divs.push(nickDiv);
-            this.forEachNick.appendChild(nickDiv);
+            forNicksNow.appendChild(nickDiv);
+            this.timerDivsOut.push(forNicksNow);
         }
         //add menu
         this.menu = document.createElement('div');
@@ -46,10 +52,11 @@ export default class addIntoRooms {
         this.toggleControls.onclick = () => {
             this.toggle();
         }
-
+        //divForButton
         this.divForButton = document.createElement('div')
         this.divForButton.id = "divForButton";
         document.body.appendChild(this.divForButton);
+
         this.buttonSend = document.createElement('button');
         this.buttonSend.id = "buttonSend";
         this.buttonSend.innerText = "Send";
@@ -58,7 +65,7 @@ export default class addIntoRooms {
             sendThruButton();
         }
     }
-    insertNicks(allNicks) {
+    insertNicks(allNicks, readyDivs) {
         this.allNicks = allNicks;
         this.allNicks.forEach(element => {
             if (element != null) {
@@ -83,6 +90,26 @@ export default class addIntoRooms {
             this.toggleControls.style.backgroundColor = "red";
             this.cameraControls.enabled = false;
         }
+    }
+    addButton() {
+        this.buttonSend.style.right = 0;
+    }
+    removeButton() {
+        this.buttonSend.style.right = "-150px";
+    }
+    addTimer(turn) {
+        this.timerDivS = [];
+        this.timerDiv = document.createElement('div');
+        this.timerDiv.className = "timerDiv";
+        this.timerDiv.innerText = "time";
+        this.timerDivS.push(this.timerDiv)
+        this.timerDivsOut[turn].appendChild(this.timerDiv);
+    }
+    removeTimer() {
+        let allThem = document.querySelectorAll(".timerDiv");
+        allThem.forEach(element => {
+            element.remove();
+        });
     }
 
 }

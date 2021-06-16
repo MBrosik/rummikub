@@ -1,4 +1,5 @@
 import {
+   BackSide,
    Box3,
    BufferGeometry,
    Group,
@@ -6,13 +7,13 @@ import {
    MeshBasicMaterial,
    MeshPhongMaterial,
    Object3D,
-   Vector3
+   Vector3,
 } from "three"
 
 export default class Card extends Object3D {
    // export default class Card extends Mesh {
    /**    
-    * @param {Group} geometry 
+    * @param {Group} mesh 
     * @param {Vector3} position 
     * @param {import("./Game_Board").default} board        
     */
@@ -21,8 +22,22 @@ export default class Card extends Object3D {
       // let {geometry, material} = mesh
       // super(geometry, material)
       super();
-      this.add(mesh.clone());
-      // this.cop
+      this.mesh = mesh.clone();
+      // console.log(this.mesh.children)
+      this.mesh.children.forEach(element => {
+         element.material.forEach(( /**@type {MeshPhongMaterial} */ el) => {
+            // el.color.setHex(0x0388fc);
+            el.shininess = 50;
+            // el.side = BackSide;
+            // el.emissive = 0x1a0559;
+            // el.side = BackSide;
+            // el.wireframe = true;
+
+         });
+      });
+      // this.mesh.children[0].material[0].color.setHex(0xff0000);
+      // this.mesh.children[0].color.setHex(0xff0000);
+      this.add(this.mesh);
 
       let box = new Box3().setFromObject(this)
 
