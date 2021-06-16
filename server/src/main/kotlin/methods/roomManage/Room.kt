@@ -13,6 +13,7 @@ import main.kotlin.methods.roomManage.cardManage.colorTypes
 import main.kotlin.methods.roomManage.playerManage.Player
 import main.kotlin.methods.roomManage.roomData.cardArrangement
 import main.kotlin.methods.roomManage.roomGson.PlayerMessage
+import main.kotlin.methods.sqlQuery
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.floor
 
@@ -20,9 +21,9 @@ class Room() {
     val playerList = mutableListOf<Player?>(null, null, null, null)
     var roomStatus: RoomStatus = RoomStatus.BeforeGame
     val allCards = mutableListOf<Card>()
-    val availableCards = mutableListOf<Card>()
-//    val JSON = sqlQuery.select("SELECT * FROM Constants WHERE key='cards'")[0]["cards"]!!
-//    val availableCards = Gson().fromJson(JSON, MutableList::class.java) as MutableList<Card>
+//    val availableCards = mutableListOf<Card>()
+    val JSON = sqlQuery.select("SELECT * FROM Constants WHERE key='cards'")[0]["VALUE"]!!
+    var availableCards = Gson().fromJson(JSON, MutableList::class.java).map { Gson().fromJson(Gson().toJson( it), Card::class.java) } as MutableList<Card>
 
     var whoseTurn = 0;
     val board = Board();
@@ -32,35 +33,55 @@ class Room() {
         // -------------------------
         // talia kart
         // -------------------------
-        var id = 0;
-        for (z in (0..1)) {
-            for (x in (1..13)) {
-                for (y in colorTypes.values()) {
-                    availableCards.add(Card(id, x.toString(), y))
-                    id++;
-                }
-            }
+//        var id = 0;
+//        for (z in (0..1)) {
+//            for (x in (1..13)) {
+//                for (y in colorTypes.values()) {
+//                    availableCards.add(Card(id, x.toString(), y))
+//                    id++;
+//                }
+//            }
+//
+//            listOf<colorTypes>(colorTypes.black, colorTypes.red).forEach {
+//                availableCards.add(Card(id, "joker", it))
+//                id++
+//            }
+//        }
+        println("")
+        println("")
+        println("")
+        println("")
+        println("")
+        println("")
+        println("")
+        println("")
+        println("init")
+        println("")
+        println("")
+        println("")
+        println("")
+        println("")
+        println("")
+        println("")
 
-            listOf<colorTypes>(colorTypes.black, colorTypes.red).forEach {
-                availableCards.add(Card(id, "joker", it))
-                id++
-            }
-        }
-
+        println(availableCards::class.java)
+        println(availableCards[0]::class.java)
         println(Gson().toJson(availableCards));
+
+//        availableCards = availableCards.map { Gson().fromJson(Gson().toJson( it), Card::class.java) } as MutableList<Card>
 
         allCards.addAll(availableCards);
 
-        availableCards.forEach {
-            val card = Gson().toJson(
-                mapOf(
-                    "id" to it.ID,
-                    "name" to it.name,
-                    "color" to it.color
-                )
-            )
-            println(card);
-        }
+//        availableCards.forEach {
+//            val card = Gson().toJson(
+//                mapOf(
+//                    "id" to it.ID,
+//                    "name" to it.name,
+//                    "color" to it.color
+//                )
+//            )
+//            println(card);
+//        }
     }
 
     fun smallBroadcast(message: String) {
@@ -518,7 +539,7 @@ class Room() {
                                         // -------------------
                                         // set First card
                                         // -------------------
-                                        if (searchTable[nextIndex].name != "Joker") {
+                                        if (searchTable[nextIndex].name != "joker") {
                                             firstIndex = nextIndex;
                                             firstCard = searchTable[firstIndex]
                                         }
@@ -575,7 +596,7 @@ class Room() {
 
                                     if (filterArr1.size == searchTable.size) {
                                         val preFirstCard = searchTable[preFirstIndex];
-                                        cardPoints = 0;
+//                                        cardPoints = 0;
                                         if (type == cardArrangement.byNumbers) {
                                             val zeroValue = preFirstCard.name.toInt() - preFirstIndex;
 
@@ -584,7 +605,7 @@ class Room() {
                                             }
 
                                         } else if (type == cardArrangement.byColors) {
-                                            cardPoints = preFirstCard.name.toInt() * searchTable.size;
+                                            cardPoints += preFirstCard.name.toInt() * searchTable.size;
                                         }
                                     }
 
@@ -647,10 +668,38 @@ class Room() {
 
                 drawCard()
             }
-            cardPoints = 0;
+//            cardPoints = 0;
 
         }
         else if (availableCards.size != 0) {
+            val arr1 = parsedSendData.inHandCards.toMutableList();
+
+            val change2 =changeInHandTableB.toList();
+
+            change2.forEach {
+                var x: Int = 0;
+                var y: Int = 0;
+
+                yloop@ for (y1 in (12..14)) {
+                    for (x1 in (0..12)) {
+                        val tempCard = arr1.find { it.x == x1 && it.y == y1 }
+
+                        if (tempCard == null) {
+                            x = x1;
+                            y = y1;
+
+                            break@yloop
+                        }
+                    }
+                }
+
+                it.x = x
+                it.y = y
+
+                arr1.add(it);
+            }
+
+            playerObject.CardsInHand = arr1;
             drawCard() // if the player took a card from the board or has not added anything to the board
         }
         board.curentCards.clear();
