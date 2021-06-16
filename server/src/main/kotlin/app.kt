@@ -67,6 +67,7 @@ fun main() {
          * routes
          */
         get("/") { request, response -> mainPageGet(request, response) }
+        get("/game"){request,response -> response.redirect("/game/index.html")}
     }
 }
 

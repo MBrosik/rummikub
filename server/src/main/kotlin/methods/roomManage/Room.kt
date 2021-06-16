@@ -283,7 +283,7 @@ class Room() {
             }
 
         } else {
-            println("Fucking winner!!!")
+            println("Winner!!!")
             // ------------------
             // if winner exists
             // ------------------
