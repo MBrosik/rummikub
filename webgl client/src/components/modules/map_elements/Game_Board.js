@@ -28,11 +28,11 @@ export default class Game_Board extends Mesh {
       super(geometry, material)
       this.position.set(BOARD_POSITION.x, BOARD_POSITION.y, BOARD_POSITION.z);
 
-      let wireframe = new Mesh(geometry.clone(), material.clone())
-      wireframe.material.wireframe = true;
-      wireframe.material.color.set(0x005f9e)
+      // let wireframe = new Mesh(geometry.clone(), material.clone())
+      // wireframe.material.wireframe = true;
+      // wireframe.material.color.set(0x005f9e)
 
-      this.add(wireframe);
+      // this.add(wireframe);
       let box = new Box3().setFromObject(this);
       console.log(box.getSize())
    }

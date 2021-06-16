@@ -200,8 +200,23 @@ export default class Main {
 
       })
    }
+   timer() {
+      this.timeCounter = Math.round((60000 - (Date.now() - this.firstTime)) / 1000)
+      // console.log(this.timeCounter)
+      if (this.interface.timerDiv != undefined) {
+         this.interface.timerDiv.innerText = this.timeCounter;
+      }
+   }
 
    whileGame(dataPlayers) {
+      this.firstTime = Date.now();
+      if (this.interV != undefined) {
+         clearInterval(this.interV);
+      }
+      this.interV = setInterval(() => {
+         this.timer();
+      }, 1000);
+
       this.dataPlayers = dataPlayers;
       console.log(this.dataPlayers)
 
