@@ -58,6 +58,8 @@ export default class Game_Board extends Mesh {
         super(geometry, material)
         this.position.set(SMALLER_POSITION[index].x, SMALLER_POSITION[index].y, SMALLER_POSITION[index].z);
 
+        this.positionInfo = SMALLER_POSITION[index];
+
         let wireframe = new Mesh(geometry.clone(), material.clone())
         // wireframe.material.wireframe = true;
         // wireframe.material.color.set(0x005f9e)

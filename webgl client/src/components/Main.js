@@ -15,11 +15,13 @@ import Game_Board from './modules/map_elements/Game_Board';
 import Smaller_Board from './modules/map_elements/Smaller_Board';
 import Card from './modules/map_elements/Card';
 import CardOutLine from './modules/map_elements/CardOutLine';
-import { BOARD_SIZE, BOARD_POSITION, FIELD, FIELDS_COUNT } from './modules/settings/board_info';
+import { BOARD_SIZE, BOARD_POSITION, FIELD, FIELDS_COUNT, SMALLER_POSITION } from './modules/settings/board_info';
 import Map from './modules/map_elements/Map';
 import CardMoveManager from './modules/after_game/CardMoveManager';
 import AddIntoRooms from './modules/initial/AddIntoRooms';
 import Interface from './modules/initial/Interface';
+import loadCardHolder from './modules/utils/loadCardHolder';
+import CardHolder from './modules/map_elements/CardHolder';
 
 
 
@@ -107,6 +109,9 @@ export default class Main {
       this.cards_resourcesv2 = await LoadCards();
 
       console.log(this.cards_resources)
+
+
+      this.cardHolderFBX = await loadCardHolder();
 
       // ----------------------
       // Function timeline
@@ -406,27 +411,58 @@ export default class Main {
       this.meshees.push(this.game_board)
 
       for (let i = 0; i < 4; i++) {
+
          this.smaller_board = new Smaller_Board(i);
          this.scene.add(this.smaller_board);
          if (i == 0) {
             this.meshees.push(this.smaller_board);
          }
+         else {
+            // -------------------------
+            // create Card Holder
+            // -------------------------
+            let pos = SMALLER_POSITION[i]
+
+            let cardHolder = new CardHolder(
+               this.cardHolderFBX,
+               pos.x, pos.z,
+               (Math.PI / 2) * i
+            )
+
+            this.scene.add(cardHolder);
+         }
+
+
       }
 
       // ------------
       // light
       // ------------
-      this.light = new DirectionalLight(0xffffee, 10);
-      this.light.intensity = 0.7;
-      this.light.position.set(0, 1200, 0);
-      this.scene.add(this.light)
-
+      [
+         [-1000, -1000],
+         [-1000, 1000],
+         [1000, -1000],
+         [1000, 1000],
+         // [-1000, 0],
+         // [1000, 0],
+         // [0, -1000],
+         // [0, 1000],
+      ].forEach(el => {
+         this.light = new DirectionalLight(0xffffee, 10);
+         this.light.intensity = 0.5;
+         this.light.position.set(el[0], 1200, el[1]);
+         this.scene.add(this.light)
+      });
 
       // ----------------------
       // append Cards
       // ----------------------
       this.boardMap = new Map();
       // console.log(this.boardMap.map)
+
+
+
+
 
       // let card = new Card(
       //    this.cards_resources["black_1"].mesh,

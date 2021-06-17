@@ -56249,7 +56249,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Main)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _modules_main_webgl_modules_Renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/main_webgl_modules/Renderer */ "./src/components/modules/main_webgl_modules/Renderer.js");
 /* harmony import */ var _modules_main_webgl_modules_Camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/main_webgl_modules/Camera */ "./src/components/modules/main_webgl_modules/Camera.js");
 /* harmony import */ var _modules_main_webgl_modules_Keyboard_Manager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/main_webgl_modules/Keyboard_Manager */ "./src/components/modules/main_webgl_modules/Keyboard_Manager.js");
@@ -56264,6 +56264,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_after_game_CardMoveManager__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/after_game/CardMoveManager */ "./src/components/modules/after_game/CardMoveManager.js");
 /* harmony import */ var _modules_initial_AddIntoRooms__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modules/initial/AddIntoRooms */ "./src/components/modules/initial/AddIntoRooms.js");
 /* harmony import */ var _modules_initial_Interface__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./modules/initial/Interface */ "./src/components/modules/initial/Interface.js");
+/* harmony import */ var _modules_utils_loadCardHolder__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./modules/utils/loadCardHolder */ "./src/components/modules/utils/loadCardHolder.js");
+/* harmony import */ var _modules_map_elements_CardHolder__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./modules/map_elements/CardHolder */ "./src/components/modules/map_elements/CardHolder.js");
+
+
 
 
 
@@ -56298,7 +56302,7 @@ class Main {
       // main WEBGL classes
       // -------------------
       this.container = container;
-      this.scene = new three__WEBPACK_IMPORTED_MODULE_14__.Scene();
+      this.scene = new three__WEBPACK_IMPORTED_MODULE_16__.Scene();
       this.renderer = new _modules_main_webgl_modules_Renderer__WEBPACK_IMPORTED_MODULE_0__.Renderer(this.scene, container);
       this.camera = new _modules_main_webgl_modules_Camera__WEBPACK_IMPORTED_MODULE_1__.default(this.renderer);
       this.keyboard = new _modules_main_webgl_modules_Keyboard_Manager__WEBPACK_IMPORTED_MODULE_2__.Keyboard();
@@ -56314,7 +56318,7 @@ class Main {
       // axis
       // -------------------
       [-1000, 1000].forEach(el => {
-         var axes = new three__WEBPACK_IMPORTED_MODULE_14__.AxesHelper(el)
+         var axes = new three__WEBPACK_IMPORTED_MODULE_16__.AxesHelper(el)
          this.scene.add(axes)
       });
 
@@ -56367,6 +56371,9 @@ class Main {
       this.cards_resourcesv2 = await (0,_modules_utils_LoadCards__WEBPACK_IMPORTED_MODULE_4__.default)();
 
       console.log(this.cards_resources)
+
+
+      this.cardHolderFBX = await (0,_modules_utils_loadCardHolder__WEBPACK_IMPORTED_MODULE_14__.default)();
 
       // ----------------------
       // Function timeline
@@ -56513,13 +56520,13 @@ class Main {
          if (element.x != undefined && element.y != undefined) {
             let card = new _modules_map_elements_Card__WEBPACK_IMPORTED_MODULE_7__.default(
                this.cards_resources[strCard].mesh.clone(true),
-               new three__WEBPACK_IMPORTED_MODULE_14__.Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_POSITION.y + (_modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
+               new three__WEBPACK_IMPORTED_MODULE_16__.Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_POSITION.y + (_modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
                this.meshees
             );
             this.scene.add(card);
             let cardOutLine = new _modules_map_elements_CardOutLine__WEBPACK_IMPORTED_MODULE_8__.default(
                this.cards_resourcesv2[strCard].mesh.clone(true),
-               new three__WEBPACK_IMPORTED_MODULE_14__.Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_POSITION.y + (_modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
+               new three__WEBPACK_IMPORTED_MODULE_16__.Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_POSITION.y + (_modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
                this.meshees
             );
             this.cards.push(card);
@@ -56544,13 +56551,13 @@ class Main {
          if (element.x != undefined && element.y != undefined) {
             let card = new _modules_map_elements_Card__WEBPACK_IMPORTED_MODULE_7__.default(
                this.cards_resources[strCard].mesh.clone(true),
-               new three__WEBPACK_IMPORTED_MODULE_14__.Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_POSITION.y + (_modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
+               new three__WEBPACK_IMPORTED_MODULE_16__.Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_POSITION.y + (_modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
                this.meshees
             );
             this.scene.add(card);
             let cardOutLine = new _modules_map_elements_CardOutLine__WEBPACK_IMPORTED_MODULE_8__.default(
                this.cards_resourcesv2[strCard].mesh.clone(true),
-               new three__WEBPACK_IMPORTED_MODULE_14__.Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_POSITION.y + (_modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
+               new three__WEBPACK_IMPORTED_MODULE_16__.Vector3(this.card_move_manager.boardMap.map[element.y][element.x].xPos, _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_POSITION.y + (_modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.BOARD_SIZE.height / 2), this.card_move_manager.boardMap.map[element.y][element.x].zPos),
                this.meshees
             );
             this.cards.push(card);
@@ -56666,27 +56673,58 @@ class Main {
       this.meshees.push(this.game_board)
 
       for (let i = 0; i < 4; i++) {
+
          this.smaller_board = new _modules_map_elements_Smaller_Board__WEBPACK_IMPORTED_MODULE_6__.default(i);
          this.scene.add(this.smaller_board);
          if (i == 0) {
             this.meshees.push(this.smaller_board);
          }
+         else {
+            // -------------------------
+            // create Card Holder
+            // -------------------------
+            let pos = _modules_settings_board_info__WEBPACK_IMPORTED_MODULE_9__.SMALLER_POSITION[i]
+
+            let cardHolder = new _modules_map_elements_CardHolder__WEBPACK_IMPORTED_MODULE_15__.default(
+               this.cardHolderFBX,
+               pos.x, pos.z,
+               (Math.PI / 2) * i
+            )
+
+            this.scene.add(cardHolder);
+         }
+
+
       }
 
       // ------------
       // light
       // ------------
-      this.light = new three__WEBPACK_IMPORTED_MODULE_14__.DirectionalLight(0xffffee, 10);
-      this.light.intensity = 0.7;
-      this.light.position.set(0, 1200, 0);
-      this.scene.add(this.light)
-
+      [
+         [-1000, -1000],
+         [-1000, 1000],
+         [1000, -1000],
+         [1000, 1000],
+         // [-1000, 0],
+         // [1000, 0],
+         // [0, -1000],
+         // [0, 1000],
+      ].forEach(el => {
+         this.light = new three__WEBPACK_IMPORTED_MODULE_16__.DirectionalLight(0xffffee, 10);
+         this.light.intensity = 0.5;
+         this.light.position.set(el[0], 1200, el[1]);
+         this.scene.add(this.light)
+      });
 
       // ----------------------
       // append Cards
       // ----------------------
       this.boardMap = new _modules_map_elements_Map__WEBPACK_IMPORTED_MODULE_10__.default();
       // console.log(this.boardMap.map)
+
+
+
+
 
       // let card = new Card(
       //    this.cards_resources["black_1"].mesh,
@@ -57572,6 +57610,43 @@ class Card extends three__WEBPACK_IMPORTED_MODULE_0__.Object3D {
 
 /***/ }),
 
+/***/ "./src/components/modules/map_elements/CardHolder.js":
+/*!***********************************************************!*\
+  !*** ./src/components/modules/map_elements/CardHolder.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ CardHolder)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _settings_board_info__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../settings/board_info */ "./src/components/modules/settings/board_info.js");
+
+
+
+class CardHolder extends three__WEBPACK_IMPORTED_MODULE_1__.Object3D {
+   constructor(fbx, x, z, rotation) {
+      super();
+
+      this.fbx = fbx.clone()
+      this.add(this.fbx);
+
+      let box = new three__WEBPACK_IMPORTED_MODULE_1__.Box3().setFromObject(this)
+
+      this.position.set(x, _settings_board_info__WEBPACK_IMPORTED_MODULE_0__.BOARD_POSITION.y + _settings_board_info__WEBPACK_IMPORTED_MODULE_0__.BOARD_SIZE.height / 2, z);
+      this.rotateY(rotation);
+
+
+
+
+      let scale = (200 / box.getSize().x)
+      this.scale.set(scale, scale, scale)
+   }
+}
+
+/***/ }),
+
 /***/ "./src/components/modules/map_elements/CardOutLine.js":
 /*!************************************************************!*\
   !*** ./src/components/modules/map_elements/CardOutLine.js ***!
@@ -57783,6 +57858,8 @@ class Game_Board extends three__WEBPACK_IMPORTED_MODULE_6__.Mesh {
         }
         super(geometry, material)
         this.position.set(_settings_board_info__WEBPACK_IMPORTED_MODULE_0__.SMALLER_POSITION[index].x, _settings_board_info__WEBPACK_IMPORTED_MODULE_0__.SMALLER_POSITION[index].y, _settings_board_info__WEBPACK_IMPORTED_MODULE_0__.SMALLER_POSITION[index].z);
+
+        this.positionInfo = _settings_board_info__WEBPACK_IMPORTED_MODULE_0__.SMALLER_POSITION[index];
 
         let wireframe = new three__WEBPACK_IMPORTED_MODULE_6__.Mesh(geometry.clone(), material.clone())
         // wireframe.material.wireframe = true;
@@ -58145,6 +58222,43 @@ async function LoadCards() {
    await Promise.all(promiseTable)
 
    return cardObject
+}
+
+/***/ }),
+
+/***/ "./src/components/modules/utils/loadCardHolder.js":
+/*!********************************************************!*\
+  !*** ./src/components/modules/utils/loadCardHolder.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ loadCardHolder)
+/* harmony export */ });
+/* harmony import */ var three_examples_jsm_loaders_FBXLoader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three/examples/jsm/loaders/FBXLoader */ "./node_modules/three/examples/jsm/loaders/FBXLoader.js");
+/* harmony import */ var _resources_models_tabliczka_fbx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../resources/models/tabliczka.fbx */ "./src/resources/models/tabliczka.fbx");
+
+
+
+
+
+
+
+async function loadCardHolder() {
+
+   /**@type {Group} */
+   let mesh;
+   await new Promise(resolve => {
+      const loader = new three_examples_jsm_loaders_FBXLoader__WEBPACK_IMPORTED_MODULE_1__.FBXLoader();
+      loader.load(_resources_models_tabliczka_fbx__WEBPACK_IMPORTED_MODULE_0__, function (obj) {
+         // cardObject[link] = { mesh }
+         mesh = obj
+         resolve(true);
+      })
+   })
+
+   return mesh;
 }
 
 /***/ }),
@@ -58687,6 +58801,16 @@ module.exports = __webpack_require__.p + "a9246c496271bce40be6.fbx";
 
 module.exports = __webpack_require__.p + "5838ae06e0a10b30e67c.fbx";
 
+/***/ }),
+
+/***/ "./src/resources/models/tabliczka.fbx":
+/*!********************************************!*\
+  !*** ./src/resources/models/tabliczka.fbx ***!
+  \********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__.p + "04b606132af6c88717bb.fbx";
+
 /***/ })
 
 /******/ 	});
@@ -58815,4 +58939,4 @@ init();
 
 /******/ })()
 ;
-//# sourceMappingURL=main.acfe0f5f782c7da40c1c074454f28bff.js
+//# sourceMappingURL=main.ecb38593a107f24d6ccf1b64bf8e1924.js
