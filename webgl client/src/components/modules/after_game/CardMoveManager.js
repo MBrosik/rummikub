@@ -111,7 +111,7 @@ export default class CardMoveManager {
       this.selected_outlinecard = this.cardsCameraColider.getIntersects3(e, this.outlineCards)[0]?.object.parent.parent;
       // console.log(this.selected_outlinecard)
 
-      if (this.selected_card != undefined) {
+      if (this.selected_card != undefined && this.selected_outlinecard != undefined) {
          this.startCardX = Math.floor((this.selected_outlinecard.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
          this.startCardZ = Math.floor((this.selected_outlinecard.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
          this.newCard = this.boardMap.map[this.startCardZ][this.startCardX].card;
@@ -143,6 +143,7 @@ export default class CardMoveManager {
     */
    mousemove_ev(e) {
       if (this.selected_card == undefined) return
+      if (this.selected_outlinecard == undefined) return;
       /**
        * Pobieram dane pozycji 
        */
@@ -235,12 +236,14 @@ export default class CardMoveManager {
     */
    mouseup_ev(e) {
       if (this.selected_card == undefined) return
+      if (this.selected_outlinecard == undefined) return
       this.selected_card.position.x = this.selected_outlinecard.position.x
       this.selected_card.position.z = this.selected_outlinecard.position.z
 
-      let x = Math.floor((this.selected_card.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
-      let z = Math.floor((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
-      console.log(this.boardMap.map[z][x])
+      let x = Math.round((this.board_intersect.point.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
+      let z = Math.round((this.board_intersect.point.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
+      // console.log(this.board_intersect.point.x, this.board_intersect.point.z)
+      // console.log(this.boardMap.map[z][x])
       this.boardMap.map[z][x].card = this.newCard;
       this.boardMap.map[z][x].color = this.newColor;
       this.boardMap.map[z][x].ID = this.newId;
