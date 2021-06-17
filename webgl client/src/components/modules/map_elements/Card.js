@@ -41,7 +41,7 @@ export default class Card extends Object3D {
 
       let box = new Box3().setFromObject(this)
 
-      let scale = (20 / box.getSize().x)
+      let scale = (17 / box.getSize().x)
       this.scale.set(scale, scale, scale)
       this.position.copy(position)
       // this.rotateX(-Math.PI / 2)

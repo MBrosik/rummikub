@@ -1,6 +1,6 @@
 export const FIELDS_COUNT = {
-   x: 13,
-   z: 15,
+   x: 16,
+   z: 18,
 }
 
 
