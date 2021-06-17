@@ -10,13 +10,10 @@ export default class CardHolder extends Object3D {
 
       let box = new Box3().setFromObject(this)
 
+      let scale = (200 / box.getSize().x)
+      this.scale.set(scale * 2, scale, scale)
+
       this.position.set(x, BOARD_POSITION.y + BOARD_SIZE.height / 2, z);
       this.rotateY(rotation);
-
-
-
-
-      let scale = (200 / box.getSize().x)
-      this.scale.set(scale, scale, scale)
    }
 }

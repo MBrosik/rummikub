@@ -20,6 +20,9 @@ import Map from './modules/map_elements/Map';
 import CardMoveManager from './modules/after_game/CardMoveManager';
 import AddIntoRooms from './modules/initial/AddIntoRooms';
 import Interface from './modules/initial/Interface';
+import loadCardHolder from './modules/utils/loadCardHolder';
+
+import CardHolder from './modules/map_elements/CardHolder';
 
 
 
@@ -107,6 +110,8 @@ export default class Main {
       this.cards_resourcesv2 = await LoadCards();
 
       console.log(this.cards_resources)
+
+      this.cardHolderFBX = await loadCardHolder();
 
       // ----------------------
       // Function timeline
