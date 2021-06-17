@@ -46,7 +46,7 @@ export default class CardMoveManager {
       // let card_arr = this.cards.map(el=>el.children.map())
       // let card_arr = [];
 
-      // this.cards.forEach(el=>{
+      // this.cards.forEach((el, ind)=>{
       //    card_arr.push(...el.children)
       // })
 
@@ -112,6 +112,7 @@ export default class CardMoveManager {
       // console.log(this.selected_outlinecard)
 
       if (this.selected_card != undefined && this.selected_outlinecard != undefined) {
+         // if (this.selected_card != undefined) {
          this.startCardX = Math.floor((this.selected_outlinecard.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
          this.startCardZ = Math.floor((this.selected_outlinecard.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
          this.newCard = this.boardMap.map[this.startCardZ][this.startCardX].card;
@@ -161,6 +162,10 @@ export default class CardMoveManager {
        * Wyszukuję w którym punkcie kliknąłem tabelę
        */
       this.board_intersect = this.gameBoardCameraColider.getIntersects2(e)[0]
+
+      if (this.board_intersect != null) {
+         this.last_board_intersect = this.board_intersect
+      }
       // console.log(this.board_intersect)
 
 
@@ -235,13 +240,24 @@ export default class CardMoveManager {
     * @param {MouseEvent} e 
     */
    mouseup_ev(e) {
+      console.log(this.selected_card)
+      console.log(this.selected_outlinecard)
       if (this.selected_card == undefined) return
       if (this.selected_outlinecard == undefined) return
       this.selected_card.position.x = this.selected_outlinecard.position.x
       this.selected_card.position.z = this.selected_outlinecard.position.z
 
-      let x = Math.round((this.board_intersect.point.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
-      let z = Math.round((this.board_intersect.point.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
+      // if (this.board_intersect != undefined) {
+      // try {
+      let x = Math.round((this.selected_card.position.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
+      let z = Math.round((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
+      // }
+      // catch {
+
+      // }
+
+      // let x = Math.round((this.last_board_intersect.point.x - FIELD.x + BOARD_SIZE.width / 2) / FIELD.width);
+      // let z = Math.round((this.last_board_intersect.point.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth);
       // console.log(this.board_intersect.point.x, this.board_intersect.point.z)
       // console.log(this.boardMap.map[z][x])
       this.boardMap.map[z][x].card = this.newCard;
@@ -249,6 +265,7 @@ export default class CardMoveManager {
       this.boardMap.map[z][x].ID = this.newId;
       this.boardMap.map[z][x].out = this.newOutCard;
       console.log(this.boardMap.map[z][x])
+      // }
 
       this.selected_card = undefined
       console.log(this.boardMap.map)
