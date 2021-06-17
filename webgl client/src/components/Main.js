@@ -416,10 +416,27 @@ export default class Main {
       // ------------
       // light
       // ------------
-      this.light = new DirectionalLight(0xffffee, 10);
-      this.light.intensity = 0.7;
-      this.light.position.set(0, 1200, 0);
-      this.scene.add(this.light)
+      // this.light = new DirectionalLight(0xffffee, 10);
+      // this.light.intensity = 0.7;
+      // this.light.position.set(0, 1200, 0);
+      // this.scene.add(this.light)
+
+
+      [
+         [-1000, -1000],
+         [-1000, 1000],
+         [1000, -1000],
+         [1000, 1000],
+         // [-1000, 0],
+         // [1000, 0],
+         // [0, -1000],
+         // [0, 1000],
+      ].forEach(el => {
+         this.light = new DirectionalLight(0xffffee, 10);
+         this.light.intensity = 0.5;
+         this.light.position.set(el[0], 1200, el[1]);
+         this.scene.add(this.light)
+      });
 
 
       // ----------------------
