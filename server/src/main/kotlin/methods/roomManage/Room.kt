@@ -31,6 +31,9 @@ class Room() {
 
     var whoseTurn = 0;
     val board = Board();
+    var minZ1 = 17;
+    var maxZ1 = 19;
+    var maxX1 = 17;
     lateinit var corountine: CoroutineScope;
 
     init {
@@ -115,7 +118,7 @@ class Room() {
                     }
                     val card = availableCards[id]
                     card.x = x
-                    card.y = 15
+                    card.y = minZ1
                     it.CardsInHand.add(card)
                     availableCards.removeAt(id);
                 }
@@ -270,8 +273,8 @@ class Room() {
             var x: Int = 0;
             var y: Int = 0;
 
-            yloop@ for (y1 in (15..17)) {
-                for (x1 in (0..15)) {
+            yloop@ for (y1 in (minZ1..maxZ1)) {
+                for (x1 in (0..maxX1)) {
                     val tempCard = playerList[whoseTurn]!!.CardsInHand.find { it.x == x1 && it.y == y1 }
 
                     if (tempCard == null) {
@@ -570,8 +573,8 @@ class Room() {
                     var x: Int = 0;
                     var y: Int = 0;
 
-                    yloop@ for (y1 in (15..17)) {
-                        for (x1 in (0..15)) {
+                    yloop@ for (y1 in (minZ1..maxZ1)) {
+                        for (x1 in (0..maxX1)) {
                             val tempCard = arr1.find { it.x == x1 && it.y == y1 }
 
                             if (tempCard == null) {
@@ -603,8 +606,8 @@ class Room() {
                 var x: Int = 0;
                 var y: Int = 0;
 
-                yloop@ for (y1 in (15..17)) {
-                    for (x1 in (0..15)) {
+                yloop@ for (y1 in (minZ1..maxZ1)) {
+                    for (x1 in (0..maxX1)) {
                         val tempCard = arr1.find { it.x == x1 && it.y == y1 }
 
                         if (tempCard == null) {

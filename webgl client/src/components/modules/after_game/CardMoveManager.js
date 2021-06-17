@@ -222,8 +222,15 @@ export default class CardMoveManager {
       this.selected_card.position.x = this.board_intersect.point.x
       this.selected_card.position.z = this.board_intersect.point.z
       if (this.selected_outlinecard != undefined && this.changePos != true) {
-         this.selected_outlinecard.position.x = startX + x_floor + field.x
-         this.selected_outlinecard.position.z = startZ + y_floor + field.z
+         // if () {
+         let zOut = Math.floor((this.selected_card.position.z - FIELD.z + BOARD_SIZE.depth / 2) / FIELD.depth)
+         // }
+         console.log(zOut)
+         if (zOut != 15) {
+            this.selected_outlinecard.position.x = startX + x_floor + field.x
+            this.selected_outlinecard.position.z = startZ + y_floor + field.z
+         }
+
       }
    }
 
