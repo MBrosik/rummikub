@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheatEngine</title>
+</head>
+
+<body>
+    randomCards: <input type="checkbox" id="randomCards"> <br>
+    cardCheck: <input type="checkbox" id="cardCheck"> <br>
+    pointCheck: <input type="checkbox" id="pointCheck"> <br>
+
+
+    <script>
+
+        class My_Fetch {
+
+
+            /**
+             * @param {RequestInfo} link
+             */
+            static async get(link) {
+                return await fetch(link).then(res => res.json())
+            }
+
+
+
+            /**
+             * @param {RequestInfo} link
+             * @param {any} data
+             */
+            static async post(link, data) {
+                return await fetch(link, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                }).then(res => res.json())
+            }
+        }
+
+
+        async function main() {
+            // let data = fetch("/getRoomConfig")            
+            let data = await My_Fetch.get("/getRoomConfig");
+
+            /**@type {HTMLInputElement} */
+            let randomCardsIn = document.getElementById("randomCards");
+            /**@type {HTMLInputElement} */
+            let cardCheckIn = document.getElementById("cardCheck");
+            /**@type {HTMLInputElement} */
+            let pointCheckIn = document.getElementById("pointCheck");
+
+            randomCardsIn.checked = data.randomCards;
+            cardCheckIn.checked = data.cardCheck;
+            pointCheckIn.checked = data.pointCheck;
+
+
+            randomCardsIn.onchange = (e) => onChange(e, "randomCards")
+            cardCheckIn.onchange = (e) => onChange(e, "cardCheck")
+            pointCheckIn.onchange = (e) => onChange(e, "pointCheck")
+
+            /**
+             * @param {Event} e
+             */
+            function onChange(e, string) {
+
+                console.log(string);
+                console.log(JSON.stringify({ [string]: e.currentTarget.checked }));
+                My_Fetch.post("/setConfig", { [string]: e.currentTarget.checked })
+            }
+        }
+
+        main()
+    </script>
+</body>
+
+</html>

@@ -41,13 +41,6 @@ object RoomObject {
         room.playerList[index] = Player(userData.session, parsedData["name"]!!)
         userData.roomClass = room
 
-        println("----------------")
-        println("Pokoje:")
-        println("----------------")
-        for (x in roomList) {
-            println(x.playerList)
-        }
-
 
         /**
          * Odesłanie klientowi wiadomości o dodaniu do pokoju

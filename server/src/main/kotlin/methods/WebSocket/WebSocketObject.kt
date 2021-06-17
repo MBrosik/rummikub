@@ -40,17 +40,6 @@ object WebSocketObject {
             sessions[user.hashCode()] = SessionStructure(user)
 
 
-            println("OnConnect")
-            println(user)
-
-//            println("localAddress: ${user.localAddress}");
-//            println("user.policy: ${user.policy}")
-//            println("user.remote: ${user.remote}")
-//            println("user.remoteAddress: ${user.remoteAddress}")
-//            println("user.protocolVersion: ${user.protocolVersion}")
-            println("user.hashCode: ${user.hashCode()}")
-
-
             val sendMap = mapOf<String, String>(
                 "type" to "onConnect",
                 "data" to "Witaj Websockecie!!"
@@ -69,14 +58,6 @@ object WebSocketObject {
              */
             RoomObject.removeFromRoom(sessions[user.hashCode()]!!)
             sessions.remove(user.hashCode())
-
-            println("")
-            println("")
-            println("")
-            println("onClose")
-            println("")
-            println("")
-            println("")
         }
 
 
@@ -92,14 +73,6 @@ object WebSocketObject {
             val parsedMessage = Gson().fromJson(message, MessageData::class.java)
 
 
-            if (parsedMessage.type != "not idle") {
-                println("onMessage")
-                println("parsedMessage")
-                println(parsedMessage)
-//                println(parsedMessage::class.java)
-//                println(parsedMessage.data::class.java)
-            }
-
             val userData = sessions[user.hashCode()]!!
 
             when (parsedMessage.type) {
@@ -110,27 +83,6 @@ object WebSocketObject {
                     }
                 }
             }
-
-
-//            println("localAddress: ${user.localAddress}");
-//            println("user.policy: ${user.policy}")
-//            println("user.remote: ${user.remote}")
-//            println("user.remoteAddress: ${user.remoteAddress}")
-//            println("user.protocolVersion: ${user.protocolVersion}")
-            if (parsedMessage.type != "not idle") {
-                println("user.hashCode: ${user.hashCode()}")
-            }
         }
     }
 }
-
-
-//            val exampleMap = parsedMessage.info as MutableMap<String, String>
-//var aa = exampleMap["aaa"]!!
-
-//            user.remote.
-
-
-//            if(parsedMessage.type == "Pokoje"){
-//
-//            }

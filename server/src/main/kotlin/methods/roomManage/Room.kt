@@ -9,9 +9,11 @@ import main.kotlin.methods.WebSocket.MessageData
 import main.kotlin.methods.WebSocket.SessionStructure
 import main.kotlin.methods.WebSocket.WebSocketObject
 import main.kotlin.methods.roomManage.cardManage.Card
-import main.kotlin.methods.roomManage.cardManage.colorTypes
 import main.kotlin.methods.roomManage.playerManage.Player
 import main.kotlin.methods.roomManage.roomData.cardArrangement
+import main.kotlin.methods.roomManage.roomData.cardCheck
+import main.kotlin.methods.roomManage.roomData.pointCheck
+import main.kotlin.methods.roomManage.roomData.randomCards
 import main.kotlin.methods.roomManage.roomGson.PlayerMessage
 import main.kotlin.methods.sqlQuery
 import kotlin.coroutines.EmptyCoroutineContext
@@ -21,9 +23,11 @@ class Room() {
     val playerList = mutableListOf<Player?>(null, null, null, null)
     var roomStatus: RoomStatus = RoomStatus.BeforeGame
     val allCards = mutableListOf<Card>()
-//    val availableCards = mutableListOf<Card>()
+
+    //    val availableCards = mutableListOf<Card>()
     val JSON = sqlQuery.select("SELECT * FROM Constants WHERE key='cards'")[0]["VALUE"]!!
-    var availableCards = Gson().fromJson(JSON, MutableList::class.java).map { Gson().fromJson(Gson().toJson( it), Card::class.java) } as MutableList<Card>
+    var availableCards = Gson().fromJson(JSON, MutableList::class.java)
+        .map { Gson().fromJson(Gson().toJson(it), Card::class.java) } as MutableList<Card>
 
     var whoseTurn = 0;
     val board = Board();
@@ -33,42 +37,6 @@ class Room() {
         // -------------------------
         // talia kart
         // -------------------------
-//        var id = 0;
-//        for (z in (0..1)) {
-//            for (x in (1..13)) {
-//                for (y in colorTypes.values()) {
-//                    availableCards.add(Card(id, x.toString(), y))
-//                    id++;
-//                }
-//            }
-//
-//            listOf<colorTypes>(colorTypes.black, colorTypes.red).forEach {
-//                availableCards.add(Card(id, "joker", it))
-//                id++
-//            }
-//        }
-        println("")
-        println("")
-        println("")
-        println("")
-        println("")
-        println("")
-        println("")
-        println("")
-        println("init")
-        println("")
-        println("")
-        println("")
-        println("")
-        println("")
-        println("")
-        println("")
-
-        println(availableCards::class.java)
-        println(availableCards[0]::class.java)
-        println(Gson().toJson(availableCards));
-
-//        availableCards = availableCards.map { Gson().fromJson(Gson().toJson( it), Card::class.java) } as MutableList<Card>
 
         allCards.addAll(availableCards);
 
@@ -88,8 +56,7 @@ class Room() {
         for (x in playerList) {
             try {
                 x?.session?.remote?.sendString(message)
-            }
-            catch (e: Throwable){
+            } catch (e: Throwable) {
                 println(e)
             }
         }
@@ -122,18 +89,6 @@ class Room() {
         // --------------
         // drawing Cards
         // --------------
-//        val sendMap = mutableMapOf<String, Any>(
-//            "playerList" to playerList.map(fun(it): Map<String, String>? {
-//                if (it != null) {
-//                    return mapOf(
-//                        "players" to it?.nick
-//                    )
-//                } else {
-//                    return null;
-//                }
-//            }),
-//            "whoseTurn" to whoseTurn
-//        )
         val sendMap = mutableMapOf<String, Any>(
             "playerList" to playerList.map {
                 if (it != null) {
@@ -153,7 +108,11 @@ class Room() {
             if (it != null) {
 
                 for (x in (0..10)) {
-                    val id = floor(Math.random() * availableCards.size).toInt()
+                    val id = if (randomCards) {
+                        floor(Math.random() * availableCards.size).toInt()
+                    } else {
+                        availableCards.size-1
+                    }
                     val card = availableCards[id]
                     card.x = x
                     card.y = 12
@@ -176,8 +135,6 @@ class Room() {
                 it.session.remote.sendString(Gson().toJson(send));
             }
         }
-
-        println("Talia kart: " + availableCards.size)
 
         gameTurn()
     }
@@ -248,27 +205,13 @@ class Room() {
                 println(" Corutyna nie istnieje$e")
             }
 
-            println("Po Corountine")
             corountine = CoroutineScope(EmptyCoroutineContext);
             corountine.launch {
-                println("Po launch")
                 delay(60000)
-                println("Po delay")
 
 
-//                if (playerList.filter { it != null }.size != 0) {
-//                if (playerList.filterNotNull().size != 0) {
                 if (playerList.filterNotNull().isNotEmpty()) {
-
-                    println("Po ifie")
-
                     board.curentCards.clear();
-
-//                    if (availableCards.size != 0) {
-//                        val id = floor(Math.random() * availableCards.size).toInt()
-//                        playerList[whoseTurn]!!.CardsInHand.add(availableCards[id])
-//                        availableCards.removeAt(id)
-//                    }
 
                     drawCard();
 
@@ -283,7 +226,6 @@ class Room() {
             }
 
         } else {
-            println("Winner!!!")
             // ------------------
             // if winner exists
             // ------------------
@@ -301,19 +243,14 @@ class Room() {
                         ),
                     )
                     try {
-                        println(WebSocketObject.sessions[it.hashCode()]);
-                        println(WebSocketObject.sessions[it.hashCode()]!!.roomClass)
-                        println(it.session)
                         WebSocketObject.sessions[it.hashCode()]!!.roomClass = null
-                    }
-                    catch(e:Throwable){
+                    } catch (e: Throwable) {
                         println("Problem")
                         println(e)
                     }
                     try {
                         it.session.remote.sendString(Gson().toJson(send));
-                    }
-                    catch(e:Throwable){
+                    } catch (e: Throwable) {
                         println("Problem")
                         println(e)
                     }
@@ -370,9 +307,6 @@ class Room() {
             }
         }!!
 
-        println(sendData);
-        println(Gson().toJson(sendData))
-
         val parsedSendData = Gson().fromJson(Gson().toJson(sendData), PlayerMessage::class.java);
         if (userData.session != playerList[whoseTurn]!!.session) return;
 
@@ -380,8 +314,6 @@ class Room() {
         // -------------------------------
         // check if everyone has position
         // -------------------------------
-        println("");
-        println("Found Card:")
         println(parsedSendData.boardCards.find { it.x == null || it.y == null } == null)
 
 
@@ -413,8 +345,6 @@ class Room() {
             && parsedSendData.boardCards.isNotEmpty()
         ) {
 
-            println("after if 345 line")
-
 
             // -----------------
             // set min max
@@ -441,9 +371,6 @@ class Room() {
 
                 for (x in (minX..maxX)) {
 
-                    println("W forze")
-//                    println("${}")
-
                     if (!everythingOK) break
 
                     // ----------------
@@ -463,7 +390,7 @@ class Room() {
                         if (searchTable.size in 1..2) {
                             everythingOK = false;
                             break;
-                        } else if(searchTable.size>=3){
+                        } else if (searchTable.size >= 3) {
 
                             // ---------------------
                             // check if all joker
@@ -625,21 +552,19 @@ class Room() {
                 if (!everythingOK) break;
             }
             if (
-                everythingOK
-                && (cardPoints>=30 || !playerObject.firstMove)
-//                true
+                (
+                        everythingOK
+                                && (cardPoints >= 30 || !playerObject.firstMove || !pointCheck)
+                        )
+                || !cardCheck
             ) {
-                println("Jeżeli wszystko OK")
-                println(cardPoints)
                 board.cards = parsedSendData.boardCards
                 playerObject.CardsInHand = parsedSendData.inHandCards
                 playerObject.firstMove = false;
             } else if (availableCards.size != 0) {
-                println("Jeżeli nie jest wszystko ok")
-                println(cardPoints)
                 val arr1 = parsedSendData.inHandCards.toMutableList();
 
-                val change2 =changeInHandTableB.toList();
+                val change2 = changeInHandTableB.toList();
 
                 change2.forEach {
                     var x: Int = 0;
@@ -668,13 +593,11 @@ class Room() {
 
                 drawCard()
             }
-//            cardPoints = 0;
 
-        }
-        else if (availableCards.size != 0) {
+        } else if (availableCards.size != 0) {
             val arr1 = parsedSendData.inHandCards.toMutableList();
 
-            val change2 =changeInHandTableB.toList();
+            val change2 = changeInHandTableB.toList();
 
             change2.forEach {
                 var x: Int = 0;
