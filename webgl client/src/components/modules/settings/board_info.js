@@ -1,6 +1,6 @@
 export const FIELDS_COUNT = {
-   x: 13,
-   z: 15,
+   x: 18,
+   z: 20,
 }
 
 
@@ -11,9 +11,9 @@ export const BOARD_POSITION = {
 }
 
 export const BOARD_SIZE = {
-   width: 400,
+   width: 500,
    height: 50,
-   depth: 400,
+   depth: 500,
 }
 
 export const SMALLER_SIZE_X = {

@@ -48,7 +48,7 @@ export default class CardOutLine extends Object3D {
         let box = new Box3().setFromObject(this)
 
         let scale = (20 / box.getSize().x)
-        this.scale.set(scale * 1.05, scale * 0.9, scale * 1.05)
+        this.scale.set(scale * 0.95, scale * 0.9, scale * 0.95)
         this.position.copy(position)
         // this.rotateX(-Math.PI / 2)
         this.board = board;
