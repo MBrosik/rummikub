@@ -7,5 +7,6 @@ class Player(
     val session: Session,
     val nick:String
 ){
-    val CardsInHand = mutableListOf<Card>()
+    var CardsInHand = mutableListOf<Card>()
+    var firstMove = true;
 }

@@ -8,7 +8,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage
 import org.eclipse.jetty.websocket.api.annotations.WebSocket
 import java.io.IOException
-import kotlin.collections.ArrayList
 
 
 object WebSocketObject {
@@ -16,7 +15,7 @@ object WebSocketObject {
      * objekt sesji, jako key przechowujemy hashCode (identyfikator) sesji,
      * a jako value dane np o połączeniu i o pokojach
      */
-    val sessions: MutableMap<Int,SessionStructure> = mutableMapOf()
+    val sessions: MutableMap<Int, SessionStructure> = mutableMapOf()
 
 
     /**
@@ -24,12 +23,10 @@ object WebSocketObject {
      *  do wszystkich dostępnych klientów
      */
     fun broadcast(message: String) {
-        for ((key,value) in sessions) {
+        for ((key, value) in sessions) {
             value.session.remote.sendString(message)
         }
     }
-
-
 
 
     @WebSocket
@@ -43,25 +40,12 @@ object WebSocketObject {
             sessions[user.hashCode()] = SessionStructure(user)
 
 
-            println("OnConnect")
-            println(user)
-
-//            println("localAddress: ${user.localAddress}");
-//            println("user.policy: ${user.policy}")
-//            println("user.remote: ${user.remote}")
-//            println("user.remoteAddress: ${user.remoteAddress}")
-//            println("user.protocolVersion: ${user.protocolVersion}")
-            println("user.hashCode: ${user.hashCode()}")
-
-
             val sendMap = mapOf<String, String>(
                 "type" to "onConnect",
                 "data" to "Witaj Websockecie!!"
             )
             user.remote.sendString(Gson().toJson(sendMap))
         }
-
-
 
 
         /**
@@ -74,11 +58,7 @@ object WebSocketObject {
              */
             RoomObject.removeFromRoom(sessions[user.hashCode()]!!)
             sessions.remove(user.hashCode())
-
-            println("onClose")
         }
-
-
 
 
         /**
@@ -92,30 +72,17 @@ object WebSocketObject {
              */
             val parsedMessage = Gson().fromJson(message, MessageData::class.java)
 
-            when(parsedMessage.type){
-                "joinRoom"-> RoomObject.searchForRoom(sessions[user.hashCode()]!!, parsedMessage.data)
+
+            val userData = sessions[user.hashCode()]!!
+
+            when (parsedMessage.type) {
+                "joinRoom" -> RoomObject.searchForRoom(sessions[user.hashCode()]!!, parsedMessage.data)
+                "playerTurn" -> {
+                    if (userData.roomClass != null) {
+                        userData.roomClass!!.playerFinishedTurn(userData, parsedMessage.data)
+                    }
+                }
             }
-
-
-            println("onMessage")
-
-//            println("localAddress: ${user.localAddress}");
-//            println("user.policy: ${user.policy}")
-//            println("user.remote: ${user.remote}")
-//            println("user.remoteAddress: ${user.remoteAddress}")
-//            println("user.protocolVersion: ${user.protocolVersion}")
-            println("user.hashCode: ${user.hashCode()}")
         }
     }
 }
-
-
-//            val exampleMap = parsedMessage.info as MutableMap<String, String>
-//var aa = exampleMap["aaa"]!!
-
-//            user.remote.
-
-
-//            if(parsedMessage.type == "Pokoje"){
-//
-//            }

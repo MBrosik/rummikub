@@ -21,7 +21,7 @@ object RoomObject {
          * Wyszukiwanie wolnych pokoi
          */
         val availableRooms = roomList.filter {
-            it.playerList.size < 4 && it.roomStatus == RoomStatus.BeforeGame
+            it.playerList.filterNotNull().size < 4 && it.roomStatus == RoomStatus.BeforeGame
         }
 
         val room: Room;
@@ -36,34 +36,41 @@ object RoomObject {
         /**
          * Dodanie gracza do pokoju
          */
-        room.playerList.add(Player(userData.session, parsedData["name"]!!))
+        val index = room.playerList.indexOf(null);
+
+        room.playerList[index] = Player(userData.session, parsedData["name"]!!)
         userData.roomClass = room
-
-        println("----------------")
-        println("Pokoje:")
-        println("----------------")
-        for (x in roomList) {
-            println(x.playerList)
-        }
-
-        /**
-         * Sprawdzanie, czy pokój jest zapełniony
-         */
-        if (room.playerList.size == 4) {
-            room.roomStatus = RoomStatus.WhileGame;
-            room.whileGame();
-        }
 
 
         /**
          * Odesłanie klientowi wiadomości o dodaniu do pokoju
          */
-        val sendMess = MessageData("onAddedToRoom", "Zostałeś dodany do pokoju!")
+        val sendMess = MessageData("onAddedToRoom", mutableMapOf("aa" to "Zostałeś dodany do pokoju!"))
         userData.session.remote.sendString(Gson().toJson(sendMess))
+
+        room.sendUsersList();
+
+
+        /**
+         * Sprawdzanie, czy pokój jest zapełniony
+         */
+        if (room.playerList.filterNotNull().size== 4) {
+            room.startGame();
+        }
     }
 
     fun removeFromRoom(userData: SessionStructure) {
-        userData.roomClass!!.playerList.removeIf { it.session == userData.session }
-        roomList.removeIf { it.playerList.size == 0 }
+
+        userData.roomClass!!.playerList.forEachIndexed { ind,it->
+            if(it!!.session == userData.session){
+                userData.roomClass!!.playerList[ind] = null;
+
+                if(userData.roomClass!!.whoseTurn == ind){
+                    userData.roomClass!!.ownerOfTheTurnEnded();
+                }
+            }
+        }
+        userData.roomClass!!.sendUsersList();
+        roomList.removeIf { it.playerList.filterNotNull().isEmpty() }
     }
 }
