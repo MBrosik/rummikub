@@ -1,7 +1,7 @@
 # Rummikub
 
 ## About
-Clone of the 2d multiplayer game called rummikub
+Clone of the 2d multiplayer game called rummikub.
 
 ## Interface
 
