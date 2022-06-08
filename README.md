@@ -17,15 +17,16 @@ Play [here](https://rumikub2.herokuapp.com/game/index.html)
 
 ## Technologies
 ### Frontend
+
 ![Three.js](https://img.shields.io/badge/three.js-000000?style=for-the-badge&logo=three.js&logoColor=FFFFFF)
-- Javascript
-- html5
-- scss
-- webpack
+![Javascript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=JavaScript&logoColor=black&style=for-the-badge)
+![html](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)
+![webpack](https://img.shields.io/badge/webpack%20-%238DD6F9.svg?&style=for-the-badge&logo=webpack&logoColor=black)
 
 ### Backend
-- Kotlin (Spark)
-- h2 database
+![kotlin](https://img.shields.io/badge/kotlin-black.svg?&style=for-the-badge&logo=kotlin&logoColor=B322E9)
+![h2](https://img.shields.io/badge/h2-001AE1.svg?&style=for-the-badge&logo=h2&logoColor=B322E9)
 
 ## Warnings
 - Game has no loading screen. You have to wait as the black screen disappears
