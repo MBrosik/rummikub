@@ -11,6 +11,10 @@ Clone of the 2d multiplayer game called rummikub
 Play [here](https://rumikub2.herokuapp.com/game/index.html)
 
 
+## Features
+- snap to grid (dragging cards)
+
+
 ## Technologies
 ### Frontend
 - Threejs
