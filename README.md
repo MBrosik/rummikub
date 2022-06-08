@@ -26,3 +26,6 @@ Play [here](https://rumikub2.herokuapp.com/game/index.html)
 ### Backend
 - Kotlin (Spark)
 - h2 database
+
+## Warnings
+- Game has no loading screen. You have to wait as the black screen disappears
