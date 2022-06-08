@@ -17,7 +17,7 @@ Play [here](https://rumikub2.herokuapp.com/game/index.html)
 
 ## Technologies
 ### Frontend
-- Threejs
+![Three.js](https://img.shields.io/badge/three.js-000000?style=for-the-badge&logo=three.js&logoColor=FFFFFF)
 - Javascript
 - html5
 - scss
