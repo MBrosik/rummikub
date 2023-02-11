@@ -1,4 +1,6 @@
 webgl client/dist
 webgl client/node_modules
 
+server/src/main/resources/public/game
+
 server/target
