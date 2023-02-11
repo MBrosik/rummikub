@@ -8,7 +8,7 @@ Clone of the 2d multiplayer game called rummikub
 ![image](https://user-images.githubusercontent.com/63966121/172072177-ef809439-4754-4904-a5e3-f3396550f997.png)
 
 
-Play [here](https://rumikub2.herokuapp.com/game/index.html)
+<!-- Play [here](https://rumikub2.herokuapp.com/game/index.html) -->
 
 
 ## Features

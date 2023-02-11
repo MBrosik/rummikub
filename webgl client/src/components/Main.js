@@ -22,13 +22,6 @@ import AddIntoRooms from './modules/initial/AddIntoRooms';
 import Interface from './modules/initial/Interface';
 
 
-
-// import {STLLoader} from 'three/examples/jsm/loaders/STLLoader'
-
-// const loader = new STLLoader();
-// loader.load( './models/stl/ascii/slotted_disk.stl', function ( geometry ) {}
-
-
 export default class Main {
    /**
     * @param {HTMLDivElement} container
@@ -122,8 +115,8 @@ export default class Main {
       my_WS.mySend("joinRoom", { name: this.nick })
 
       // ---------------------------------
-      // Nasłuch wiadomości od serwera
-      // o dodaniu do pokoju
+      // Listening for messages from the server
+      // about adding to the room
       // ---------------------------------
 
       let messageFunc = null;

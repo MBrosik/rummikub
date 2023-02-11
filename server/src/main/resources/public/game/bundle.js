@@ -56282,13 +56282,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-// import {STLLoader} from 'three/examples/jsm/loaders/STLLoader'
-
-// const loader = new STLLoader();
-// loader.load( './models/stl/ascii/slotted_disk.stl', function ( geometry ) {}
-
-
 class Main {
    /**
     * @param {HTMLDivElement} container
@@ -56382,8 +56375,8 @@ class Main {
       _modules_WebSocket__WEBPACK_IMPORTED_MODULE_3__.my_WS.mySend("joinRoom", { name: this.nick })
 
       // ---------------------------------
-      // Nasłuch wiadomości od serwera
-      // o dodaniu do pokoju
+      // Listening for messages from the server
+      // about adding to the room
       // ---------------------------------
 
       let messageFunc = null;
@@ -56735,28 +56728,21 @@ class Main {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "messageFunctions": () => (/* binding */ messageFunctions),
 /* harmony export */   "WS_Class": () => (/* binding */ WS_Class),
 /* harmony export */   "my_WS": () => (/* binding */ my_WS)
 /* harmony export */ });
 /**
- * Funkcje wykonujące się podczas odbierania wiadomości 
  * @type {{[x:string]:(data)=>void}} 
  */
-// export const messageFunctions = {};
+const messageFunctions = {};
 
 class WS_Class extends WebSocket {
    constructor() {
-
-      /**
-       * Wywołanie konstructora 
-       */
-      // super(`ws://${location.hostname}:${5000}/rummikub`)
-      super(`wss://rumikub2.herokuapp.com/rummikub`)
-
-
-      /**
-       * Funkcje odpowiadające za nasłuch
-       */
+      
+      super(`ws://${location.hostname}:${5000}/rummikub`)
+      // super(`wss://rumikub2.herokuapp.com/rummikub`)
+      
 
       this.onopen = this.onopen_ev.bind(this)
       // this.onmessage = this.onmessage_ev.bind(this)
@@ -56764,20 +56750,20 @@ class WS_Class extends WebSocket {
       this.onclose = this.onclose_ev.bind(this)
       this.addEventListener("message", (e) => {
          console.log("-----------------");
-         console.log("Testowy");
+         console.log("Test");
          console.log("-----------------");
 
          console.log(JSON.parse(e.data));
 
          console.log("-----------------");
-         console.log("koniec");
+         console.log("End");
          console.log("-----------------");
       })
    }
 
 
    /**
-    * Funkcja, która wykonuje się po połączeniu się z websocketem
+    * The function that executes when you connect to the websocket
     */
    onopen_ev() {
       console.log("onopen")
@@ -56788,7 +56774,7 @@ class WS_Class extends WebSocket {
    }
 
    /**
-    * Zamknięcie połączenia
+    * Close connection
     * @param {CloseEvent} e 
     */
    onclose_ev(e) {
@@ -56797,7 +56783,7 @@ class WS_Class extends WebSocket {
    }
 
    /**
-    * odbieranie danych z serwera
+    * receiving data from the server
     * @param {MessageEvent} e 
     */
    onmessage_ev(e) {
@@ -56811,7 +56797,7 @@ class WS_Class extends WebSocket {
    }
 
    /**
-    * obsługa błędów    
+    * error handling   
     * @param {Event} e 
     */
    onerror_ev(e) {
@@ -56829,10 +56815,8 @@ class WS_Class extends WebSocket {
 
 
 /**
- * Tutaj znajdzie się instacja klasy
  * @type {WS_Class} 
  */
-// export let my_WS = null;
 let my_WS = new WS_Class();
 
 /***/ }),
@@ -58832,4 +58816,4 @@ init();
 
 /******/ })()
 ;
-//# sourceMappingURL=main.e06a82917afa9b2d84ff1a63d1411253.js
+//# sourceMappingURL=main.b0f639b4e0291972df76aa7b0c8c630a.js

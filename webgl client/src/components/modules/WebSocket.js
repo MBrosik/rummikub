@@ -1,22 +1,14 @@
 /**
- * Funkcje wykonujące się podczas odbierania wiadomości 
  * @type {{[x:string]:(data)=>void}} 
  */
-// export const messageFunctions = {};
+export const messageFunctions = {};
 
 export class WS_Class extends WebSocket {
    constructor() {
-
-      /**
-       * Wywołanie konstructora 
-       */
-      // super(`ws://${location.hostname}:${5000}/rummikub`)
-      super(`wss://rumikub2.herokuapp.com/rummikub`)
-
-
-      /**
-       * Funkcje odpowiadające za nasłuch
-       */
+      
+      super(`ws://${location.hostname}:${5000}/rummikub`)
+      // super(`wss://rumikub2.herokuapp.com/rummikub`)
+      
 
       this.onopen = this.onopen_ev.bind(this)
       // this.onmessage = this.onmessage_ev.bind(this)
@@ -24,20 +16,20 @@ export class WS_Class extends WebSocket {
       this.onclose = this.onclose_ev.bind(this)
       this.addEventListener("message", (e) => {
          console.log("-----------------");
-         console.log("Testowy");
+         console.log("Test");
          console.log("-----------------");
 
          console.log(JSON.parse(e.data));
 
          console.log("-----------------");
-         console.log("koniec");
+         console.log("End");
          console.log("-----------------");
       })
    }
 
 
    /**
-    * Funkcja, która wykonuje się po połączeniu się z websocketem
+    * The function that executes when you connect to the websocket
     */
    onopen_ev() {
       console.log("onopen")
@@ -48,7 +40,7 @@ export class WS_Class extends WebSocket {
    }
 
    /**
-    * Zamknięcie połączenia
+    * Close connection
     * @param {CloseEvent} e 
     */
    onclose_ev(e) {
@@ -57,7 +49,7 @@ export class WS_Class extends WebSocket {
    }
 
    /**
-    * odbieranie danych z serwera
+    * receiving data from the server
     * @param {MessageEvent} e 
     */
    onmessage_ev(e) {
@@ -71,7 +63,7 @@ export class WS_Class extends WebSocket {
    }
 
    /**
-    * obsługa błędów    
+    * error handling   
     * @param {Event} e 
     */
    onerror_ev(e) {
@@ -89,8 +81,6 @@ export class WS_Class extends WebSocket {
 
 
 /**
- * Tutaj znajdzie się instacja klasy
  * @type {WS_Class} 
  */
-// export let my_WS = null;
 export let my_WS = new WS_Class();

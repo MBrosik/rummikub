@@ -25,15 +25,15 @@ class Room() {
     val allCards = mutableListOf<Card>()
 
     //    val availableCards = mutableListOf<Card>()
-    val JSON = sqlQuery.select("SELECT * FROM Constants WHERE key='cards'")[0]["VALUE"]!!
+    val JSON = sqlQuery.select("SELECT * FROM Constants WHERE name='cards'")[0]["VAL"]!!
     var availableCards = Gson().fromJson(JSON, MutableList::class.java)
         .map { Gson().fromJson(Gson().toJson(it), Card::class.java) } as MutableList<Card>
 
     var whoseTurn = 0;
     val board = Board();
-    var minZ1 = 12;
-    var maxZ1 = 14;
-    var maxX1 = 12;
+    var minZ1 = 17;
+    var maxZ1 = 19;
+    var maxX1 = 17;
     lateinit var corountine: CoroutineScope;
 
     init {
