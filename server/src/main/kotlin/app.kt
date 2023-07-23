@@ -106,8 +106,9 @@ fun setConfig(request: Request, response: Response):String {
 
 
 fun getHerokuPort(): Int {
-    val processBuilder = ProcessBuilder()
-    return if (processBuilder.environment()["PORT"] != null) {
-        processBuilder.environment()["PORT"]!!.toInt()
-    } else 5000
+    return 5000
+//    val processBuilder = ProcessBuilder()
+//    return if (processBuilder.environment()["PORT"] != null) {
+//        processBuilder.environment()["PORT"]!!.toInt()
+//    } else 5000
 }

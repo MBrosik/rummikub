@@ -30,3 +30,4 @@ Clone of the 2d multiplayer game called rummikub
 
 ## Warnings
 - Game has no loading screen. You have to wait as the black screen disappears
+- Works with IntelliJ 2021.2.3
