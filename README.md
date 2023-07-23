@@ -16,6 +16,7 @@ Clone of the 2d multiplayer game called rummikub
 
 
 ## Technologies
+
 ### Frontend
 
 ![Three.js](https://img.shields.io/badge/three.js-000000?style=for-the-badge&logo=three.js&logoColor=FFFFFF)
@@ -27,6 +28,9 @@ Clone of the 2d multiplayer game called rummikub
 ### Backend
 ![kotlin](https://img.shields.io/badge/kotlin-black.svg?&style=for-the-badge&logo=kotlin&logoColor=B322E9)
 ![h2](https://img.shields.io/badge/h2-001AE1.svg?&style=for-the-badge&logo=h2&logoColor=B322E9)
+
+### Other
+![Docker Badge](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=for-the-badge)
 
 ## Warnings
 - Game has no loading screen. You have to wait as the black screen disappears
