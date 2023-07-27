@@ -31,9 +31,9 @@ class Room() {
 
     var whoseTurn = 0;
     val board = Board();
-    var minZ1 = 17;
-    var maxZ1 = 19;
-    var maxX1 = 17;
+    var minZ1 = 12;
+    var maxZ1 = 14;
+    var maxX1 = 12;
     lateinit var corountine: CoroutineScope;
 
     init {
