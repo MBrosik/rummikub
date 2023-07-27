@@ -1,6 +1,7 @@
 webgl client/dist
 webgl client/node_modules
 
-server/src/main/resources/public/game
+server/src/main/resources/public/game/*
+!server/src/main/resources/public/game/copy the files from the client's dist folder here
 
 server/target
